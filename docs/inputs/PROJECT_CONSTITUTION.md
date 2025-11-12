@@ -1,98 +1,62 @@
 # Project Constitution
-## Socratic LLM Discussion Forum
-
-Use this with SpecKit's `/constitute` command to seed project rules and standards.
+**Use with:** `/constitute docs/inputs/PROJECT_CONSTITUTION.md`
 
 ---
 
-## Project Identity
+## Stack (Pinned Versions)
 
-**Name:** Socratic LLM Discussion Forum
-**Repository:** The-Socratic-Method-of-Large-Language-Models2
-**Type:** Multi-agent AI platform for structured debate
-**Target Launch:** 20 weeks from kickoff
-
----
-
-## Technology Stack (Pinned Versions)
-
-### Backend
-- **Language:** Python 3.11+
-- **Framework:** FastAPI 0.104+
-- **Agent Orchestration:** LangGraph 0.2+ or AutoGen 0.2+
-- **LLM Abstraction:** LiteLLM 1.40+
-- **Async:** asyncio, aiohttp 3.9+
-
-### Frontend
-- **Language:** TypeScript 5.3+
-- **Runtime:** Node.js 20 LTS
-- **Framework:** Next.js 14.2+ (App Router)
-- **UI Library:** React 18.2+
-- **UI Components:** shadcn/ui + Tailwind CSS 3.4+
-- **State:** Zustand 4.5+ or Jotai 2.6+
-
-### Data & Storage
-- **Primary Database:** PostgreSQL 15+
-- **Cache:** Redis 7.2+
-- **Vector Store:** Pinecone or Weaviate (latest stable)
-- **Object Storage:** S3-compatible
-
-### Infrastructure
-- **Containers:** Docker 24+, Docker Compose 2.24+
-- **Orchestration:** Kubernetes 1.28+ or AWS ECS
-- **CI/CD:** GitHub Actions
-- **IaC:** Terraform 1.6+ or Pulumi 3.100+
-- **Monitoring:** Datadog or Prometheus + Grafana
+| Component | Version | Notes |
+|-----------|---------|-------|
+| **Python** | 3.11+ | Backend language |
+| **TypeScript** | 5.3+ | Frontend language |
+| **FastAPI** | 0.104+ | API framework |
+| **Next.js** | 14.2+ | Frontend (App Router) |
+| **React** | 18.2+ | UI library |
+| **Node.js** | 20 LTS | Runtime |
+| **PostgreSQL** | 15+ | Primary DB |
+| **Redis** | 7.2+ | Cache |
+| **LiteLLM** | 1.40+ | LLM abstraction |
+| **LangGraph** | 0.2+ | Agent orchestration |
+| **Docker** | 24+ | Containers |
+| **Kubernetes** | 1.28+ | Orchestration |
+| **Terraform** | 1.6+ | IaC |
 
 ---
 
-## Code Quality Standards
+## Code Standards
 
 ### Python
-- **Formatter:** Black (line-length: 100)
-- **Linter:** Ruff (select: E, F, I, N, W)
-- **Type Checking:** mypy (strict mode)
-- **Import Sorting:** isort (compatible with Black)
+```yaml
+Formatter: Black (line-length: 100)
+Linter: Ruff (select: E, F, I, N, W)
+Type Checker: mypy (strict mode)
+Import Sort: isort (Black-compatible)
+```
 
 ### TypeScript
-- **Formatter:** Prettier (semi: true, singleQuote: true, trailingComma: 'es5')
-- **Linter:** ESLint (extends: next/core-web-vitals, typescript-recommended)
-- **Type Checking:** TypeScript strict mode enabled
+```yaml
+Formatter: Prettier (semi: true, singleQuote: true)
+Linter: ESLint (next/core-web-vitals, typescript-recommended)
+Type Checker: TypeScript strict mode
+```
 
 ### Pre-commit Hooks
-```yaml
-repos:
-  - repo: local
-    hooks:
-      - id: black
-      - id: ruff
-      - id: mypy
-      - id: prettier
-      - id: eslint
-```
+Required: black, ruff, mypy, prettier, eslint
 
 ---
 
-## Test Coverage Requirements
+## Test Requirements
 
-### Minimum Thresholds
-- **Unit Tests:** 80% coverage
-- **Integration Tests:** 70% coverage
-- **E2E Tests:** 5-10 critical user flows
+| Type | Coverage | Scope |
+|------|----------|-------|
+| **Unit** | >80% | All logic, isolated |
+| **Integration** | >70% | Component interactions |
+| **E2E** | 10 flows | Critical user paths |
 
-### Test Structure
-```
-tests/
-├── unit/              # Fast, isolated tests
-├── integration/       # Component integration tests
-├── e2e/              # Full user flow tests
-└── fixtures/         # Test data and mocks
-```
-
-### Test Commands
+**Commands:**
 ```bash
 # Python
-pytest --cov=src --cov-report=html --cov-fail-under=80
+pytest --cov=src --cov-fail-under=80
 
 # TypeScript
 npm test -- --coverage --coverageThreshold='{"global":{"statements":80}}'
@@ -100,100 +64,55 @@ npm test -- --coverage --coverageThreshold='{"global":{"statements":80}}'
 
 ---
 
-## Git Branch Policy
+## Git Policy
 
-### Branch Naming Convention
-```
-<type>/<description>
-```
+### Branch Naming
+`<type>/<description>` where type = feature | fix | refactor | docs | test | chore
 
-**Types:**
-- `feature/*` - New features
-- `fix/*` - Bug fixes
-- `refactor/*` - Code refactoring
-- `docs/*` - Documentation only
-- `test/*` - Test additions/changes
-- `chore/*` - Maintenance tasks
+### Branch Protection (main)
+- ✅ Require PR review (min 1)
+- ✅ Require status checks pass
+- ✅ Require up-to-date branches
+- ✅ Require linear history
+- ❌ No direct push
+- ❌ No force push
 
-**Examples:**
-- `feature/agent-runtime`
-- `fix/consensus-calculation`
-- `refactor/llm-abstraction`
-
-### Branch Protection (main/master)
-- ✅ Require pull request reviews (minimum 1)
-- ✅ Require status checks to pass
-  - All tests passing
-  - Linting passing
-  - Coverage thresholds met
-- ✅ Require branches to be up to date
-- ✅ Require linear history (squash or rebase)
-- ❌ No direct pushes to main
-- ❌ No force pushes
-
-### Development Branches
-- `develop` - Integration branch for features
-- `staging` - Pre-production testing
-- `main/master` - Production-ready code
+### Workflow
+develop → staging → main
 
 ---
 
-## Documentation Requirements
+## Documentation
 
-### Required Documentation
-Every feature must include:
-1. **Inline Code Documentation**
-   - All public functions/methods documented
-   - Docstrings following conventions:
-     - Python: Google-style docstrings
-     - TypeScript: TSDoc comments
-
-2. **README Files**
-   - Root README.md
-   - Module/component READMEs for complex subsystems
-   - API documentation (OpenAPI/Swagger for REST)
-
-3. **Architecture Decision Records (ADRs)**
-   - Store in `docs/adr/`
-   - Use template: Context, Decision, Consequences
-   - Required for: LLM provider choices, database design, security decisions
-
-4. **Changelog**
-   - Maintain CHANGELOG.md
-   - Follow Keep a Changelog format
-   - Update with every release
-
-### Documentation Standards
-- **Format:** Markdown
-- **Diagrams:** Mermaid or PlantUML
-- **API Specs:** OpenAPI 3.1
-- **Code Examples:** Must be executable and tested
+### Required
+1. **Inline:** All public functions (Python: Google-style, TS: TSDoc)
+2. **READMEs:** Root + complex modules
+3. **ADRs:** `docs/adr/` for major decisions
+4. **Changelog:** CHANGELOG.md (Keep a Changelog format)
+5. **API Specs:** OpenAPI 3.1
 
 ---
 
-## Security & Privacy
+## Security
 
-### Security Standards
+### Secrets
+- ✅ Environment variables only
+- ✅ AWS Secrets Manager / Vault
+- ✅ Rotate quarterly
+- ❌ Never commit
 
-#### API Keys & Secrets
-- ✅ Use environment variables (never commit secrets)
-- ✅ Store in AWS Secrets Manager / HashiCorp Vault
-- ✅ Rotate API keys quarterly
-- ✅ Audit secret access monthly
+### Authentication
+- JWT (1-hour expiry)
+- Refresh tokens (HTTP-only cookies)
+- Rate limit: 100 req/min per user
 
-#### Authentication & Authorization
-- ✅ JWT tokens with 1-hour expiry
-- ✅ Refresh tokens stored securely (HTTP-only cookies)
-- ✅ Rate limiting: 100 requests/minute per user
-- ✅ RBAC (Role-Based Access Control) for admin features
+### Input Validation
+- Sanitize all user inputs
+- Parameterized queries (SQL injection prevention)
+- Prompt injection detection
+- File upload restrictions
 
-#### Input Validation
-- ✅ Sanitize all user inputs
-- ✅ Parameterized database queries (prevent SQL injection)
-- ✅ Prompt injection detection for LLM inputs
-- ✅ File upload restrictions (type, size limits)
-
-#### Security Headers
+### Headers
 ```
 Strict-Transport-Security: max-age=31536000
 X-Frame-Options: DENY
@@ -201,427 +120,262 @@ X-Content-Type-Options: nosniff
 Content-Security-Policy: default-src 'self'
 ```
 
-#### Dependency Management
-- ✅ Automated dependency scanning (Dependabot, Snyk)
-- ✅ Update dependencies monthly
-- ✅ Pin exact versions in production
-- ✅ Security audit before every release
-
-### Privacy Standards
-
-#### Data Handling
-- ✅ GDPR compliant (EU users)
-- ✅ CCPA compliant (California users)
-- ✅ Data retention: 90 days for discussions (configurable)
-- ✅ User data export available on request
-- ✅ Right to deletion ("forget me")
-
-#### PII Protection
-- ✅ Encrypt PII at rest (AES-256)
-- ✅ Encrypt in transit (TLS 1.3)
-- ✅ Anonymize logs (no PII in logs)
-- ✅ Minimize data collection (only necessary fields)
-
-#### LLM Provider Data Sharing
-- ✅ Disclose data sent to LLM providers
-- ✅ Use zero-retention API options where available
-- ✅ User consent for data processing
-- ✅ Comply with provider terms of service
-
-#### Audit Logging
-- ✅ Log all authentication events
-- ✅ Log data access and modifications
-- ✅ Retain audit logs for 1 year
-- ✅ Automated anomaly detection
+### Dependencies
+- Automated scanning (Dependabot, Snyk)
+- Update monthly
+- Pin versions in production
+- Security audit pre-release
 
 ---
 
-## Code Review Standards
+## Privacy
 
-### Review Checklist
-Every PR must verify:
-- [ ] Code follows style guide (linter passes)
-- [ ] Tests added/updated (coverage maintained)
-- [ ] Documentation updated
-- [ ] No hardcoded secrets
-- [ ] Error handling present
-- [ ] Performance implications considered
-- [ ] Security implications reviewed
-- [ ] Breaking changes documented
+### Compliance
+- ✅ GDPR (EU)
+- ✅ CCPA (California)
+- Data retention: 90 days
+- User data export available
+- Right to deletion
 
-### Review Process
-1. **Self-review:** Author reviews own PR first
-2. **Peer review:** Minimum 1 approval required
-3. **CI checks:** All automated checks pass
-4. **Merge:** Squash and merge preferred
+### Protection
+- Encrypt PII: AES-256 (rest), TLS 1.3 (transit)
+- Anonymize logs (no PII)
+- Minimize collection
+- LLM provider data disclosure
+- User consent required
 
-### Review Response Time
-- Critical bugs: <4 hours
-- Features: <24 hours
-- Documentation: <48 hours
+### Audit
+- Log auth events
+- Log data access/modifications
+- Retain logs: 1 year
+- Automated anomaly detection
 
 ---
 
-## Performance Standards
+## Performance
 
-### API Response Times (p95)
-- Simple queries: <200ms
-- Agent contributions: <10s
-- Full discussion round: <90s
-- Total discussion: <10 minutes
+### Targets (p95)
+- Simple API: <200ms
+- Agent contribution: <10s
+- Discussion round: <90s
+- Total discussion: <10 min
+- Lighthouse: >90
+- FCP: <1.5s, TTI: <3s, CLS: <0.1
 
-### Database Query Limits
-- Maximum query time: 1s
-- N+1 queries: Not allowed (use eager loading)
-- Index all foreign keys
-- Explain plans required for complex queries
-
-### Frontend Performance
-- Lighthouse score: >90
-- First Contentful Paint: <1.5s
-- Time to Interactive: <3s
-- Cumulative Layout Shift: <0.1
+### Database
+- Max query: 1s
+- No N+1 queries
+- Index all FKs
+- Explain plans required
 
 ---
 
-## Error Handling Standards
+## Error Handling
 
-### Error Categories
-1. **User Errors** (4xx)
-   - Return helpful error messages
-   - Include suggestion for correction
-   - Log at INFO level
+### Categories
+| Code | Level | Action |
+|------|-------|--------|
+| **4xx** | INFO | Helpful message + suggestion |
+| **5xx** | ERROR | Generic message + detailed log + alert |
+| **External** | WARN | Retry (3×), fallback, degrade |
 
-2. **System Errors** (5xx)
-   - Generic message to user
-   - Detailed logging for debugging
-   - Alert on-call engineer
-   - Log at ERROR level
-
-3. **External Service Errors**
-   - Retry with exponential backoff (3 attempts)
-   - Fallback to alternative service
-   - Graceful degradation
-   - Log at WARN level
-
-### Error Response Format
+### Format
 ```json
 {
   "error": {
-    "code": "CONSENSUS_TIMEOUT",
-    "message": "Discussion did not reach consensus within maximum rounds",
-    "details": {
-      "max_rounds": 10,
-      "completed_rounds": 10,
-      "consensus_level": 0.65
-    },
-    "suggestion": "Try reducing the scope of the question or increasing max rounds"
+    "code": "ERROR_CODE",
+    "message": "User-friendly message",
+    "details": {},
+    "suggestion": "How to fix"
   }
 }
 ```
 
 ---
 
-## Logging Standards
+## Logging
 
-### Log Levels
-- **DEBUG:** Development only, verbose details
-- **INFO:** Normal operations, user actions
-- **WARN:** Degraded service, recoverable errors
-- **ERROR:** Operation failures, requires attention
-- **CRITICAL:** System failures, immediate action needed
+### Levels
+DEBUG (dev only) | INFO (ops) | WARN (degraded) | ERROR (failure) | CRITICAL (system down)
 
-### Structured Logging
+### Structured Format
 ```json
 {
-  "timestamp": "2025-11-12T10:30:00Z",
+  "timestamp": "ISO8601",
   "level": "INFO",
-  "service": "agent-orchestrator",
-  "message": "Discussion round completed",
-  "context": {
-    "discussion_id": "uuid",
-    "round": 3,
-    "agents": 5,
-    "duration_ms": 45000
-  }
+  "service": "name",
+  "message": "text",
+  "context": {}
 }
 ```
 
-### Log Retention
+### Retention
 - Production: 30 days
 - Staging: 14 days
-- Development: 7 days
-- Audit logs: 1 year
+- Dev: 7 days
+- Audit: 1 year
 
 ---
 
-## Monitoring & Alerting
+## Monitoring
 
-### Key Metrics
-- **Availability:** Uptime >99.9%
-- **Error Rate:** <1% of requests
-- **Response Time:** p95 <90s for discussions
-- **LLM API Success Rate:** >95%
-- **Tool Call Success Rate:** >90%
+### Metrics
+- Uptime: >99.9%
+- Error rate: <1%
+- Response time (p95): <90s
+- LLM API success: >95%
+- Tool success: >90%
 
 ### Alerts
-- Critical: Page on-call engineer
-- High: Slack notification
-- Medium: Email
-- Low: Dashboard only
+- **Critical:** Page on-call
+- **High:** Slack
+- **Medium:** Email
+- **Low:** Dashboard only
 
 ### Health Checks
-```
-/health          - Simple alive check
-/health/ready    - Ready to serve traffic
-/health/live     - Container liveness
-```
+- `/health` - alive
+- `/health/ready` - ready for traffic
+- `/health/live` - container liveness
 
 ---
 
-## Deployment Standards
+## Deployment
 
-### Environment Parity
-- Development, Staging, Production should be identical
-- Use same Docker images across environments
-- Environment-specific: configurations only (env vars)
+### Process
+Build → Tag (semver) → Deploy Staging → Smoke Tests → Deploy Prod (manual) → Monitor (1 hour)
 
-### Deployment Process
-1. **Build:** CI builds and tests
-2. **Tag:** Semantic versioning (v1.2.3)
-3. **Deploy to Staging:** Automated
-4. **Smoke Tests:** Run critical paths
-5. **Deploy to Production:** Manual approval
-6. **Monitor:** Watch metrics for 1 hour
-
-### Rollback Plan
-- Must be possible within 5 minutes
-- Keep previous 3 releases available
-- Automated rollback on error spike
-
-### Zero-Downtime Deployments
-- Use rolling updates (Kubernetes)
-- Or blue-green deployments
-- Database migrations backward compatible
+### Requirements
+- Zero-downtime (rolling/blue-green)
+- Rollback: <5 min
+- Keep 3 previous releases
+- DB migrations backward-compatible
 
 ---
 
-## API Design Standards
+## API Standards
 
-### RESTful Conventions
-- Use standard HTTP methods: GET, POST, PUT, PATCH, DELETE
-- Resource-oriented URLs: `/discussions/{id}/rounds/{round}`
-- Plural nouns: `/discussions` not `/discussion`
-- Versioning: `/api/v1/discussions`
+### REST
+- Methods: GET, POST, PUT, PATCH, DELETE
+- URLs: `/api/v1/resource/{id}`
+- Format: JSON, ISO 8601 dates
+- Pagination: `limit`, `offset`
+- Sort: `sort=field:desc`
 
-### Request/Response Format
-- Content-Type: `application/json`
-- Date format: ISO 8601
-- Pagination: `limit` and `offset` parameters
-- Filtering: Query parameters
-- Sorting: `sort=created_at:desc`
-
-### API Documentation
-- OpenAPI 3.1 specification
-- Interactive docs at `/api/docs`
-- Examples for every endpoint
-- Error scenarios documented
+### Documentation
+- OpenAPI 3.1 spec
+- Interactive docs: `/api/docs`
+- Examples for all endpoints
 
 ---
 
-## LLM API Usage Standards
+## LLM Usage
 
 ### Cost Control
-- Token budget per agent: 2,000 tokens/contribution
-- Discussion budget: 50,000 tokens total
-- User quotas: Configurable per tier
-- Monthly spending alerts: >$10k
+- Token budget: 2K/contribution, 50K/discussion
+- User quotas per tier
+- Monthly alerts: >$10k
 
-### Provider Diversity
-- Never rely on single provider
-- Implement fallback providers
-- Monitor provider health
+### Providers
+- Never single provider
+- Implement fallbacks
+- Monitor health
 - Track cost per provider
 
-### Prompt Management
-- Store prompts in code (not database)
+### Prompts
 - Version control all prompts
-- A/B test prompt variations
-- Log prompt performance metrics
+- A/B test variations
+- Log performance
 
-### Tool Calling
-- Explain before calling (reasoning)
-- Validate all parameters
-- Timeout after 30s
-- Retry failed calls (max 2 attempts)
-
----
-
-## Dependency Management
-
-### Backend (Python)
-```
-# requirements.txt - Direct dependencies
-# requirements-dev.txt - Dev dependencies
-# requirements-lock.txt - Pinned (pip freeze)
-```
-
-### Frontend (TypeScript)
-```
-# package.json - Direct dependencies
-# package-lock.json - Lock file (committed)
-```
-
-### Update Policy
-- Security patches: Immediate
-- Minor updates: Monthly
-- Major updates: Quarterly (with testing)
-- Pre-release: Never in production
+### Tools
+- Explain before calling
+- Validate parameters
+- Timeout: 30s
+- Retry: max 2×
 
 ---
 
-## Out of Scope (Explicitly)
-
-The following are **NOT** in scope for the initial release:
+## Explicitly Out of Scope
 
 ### Features
-- ❌ Mobile native apps (iOS/Android)
-- ❌ Video/audio input/output
-- ❌ Real-time collaboration (multiple users in one discussion)
+- ❌ Mobile native apps
+- ❌ Video/audio I/O
+- ❌ Real-time multi-user collaboration
 - ❌ Custom LLM fine-tuning
 - ❌ On-premise deployment
-- ❌ Blockchain/NFT integration
-- ❌ Social features (likes, comments, followers)
-- ❌ Discussion replay with different settings
-- ❌ Export to formats other than PDF, Markdown, JSON
+- ❌ Social features
+- ❌ Discussion replay/branching
+- ❌ Non-PDF/Markdown/JSON exports
 
 ### Integrations
-- ❌ Slack/Teams bots (post-MVP)
+- ❌ Slack/Teams bots
 - ❌ Browser extensions
-- ❌ API for external developers (post-launch)
-- ❌ Zapier/IFTTT integration
-- ❌ CRM integrations (Salesforce, HubSpot)
+- ❌ Developer API (post-MVP)
+- ❌ CRM integrations
 
 ### Technical
-- ❌ Multi-tenancy (each customer isolated DB)
-- ❌ White-label solutions
-- ❌ Custom domain hosting
-- ❌ SSO (SAML, OAuth providers)
+- ❌ Multi-tenancy
+- ❌ White-label
+- ❌ Custom domains
+- ❌ SSO
 - ❌ Offline mode
-- ❌ Desktop applications
 
 ### Geographic
-- ❌ Non-English language support (MVP is English-only)
-- ❌ Regional compliance (GDPR/CCPA only)
-- ❌ Data residency requirements
+- ❌ Non-English languages (MVP)
+- ❌ Data residency (beyond GDPR/CCPA)
 
 ---
 
 ## Constraints
 
-### Technical Constraints
-- **Latency:** LLM API calls are inherently slow (3-10s per call)
-- **Cost:** LLM APIs expensive at scale (requires token budgets)
-- **Rate Limits:** All LLM providers have rate limits
-- **Context Windows:** Limited by smallest model (8K-200K tokens)
-- **Tool Reliability:** External APIs may fail or be slow
+### Technical
+- LLM latency: 3-10s per call (unavoidable)
+- Cost: LLM APIs expensive (require budgets)
+- Rate limits: All providers limited
+- Context windows: 8K-200K tokens
 
-### Business Constraints
-- **Budget:** $50k for 20-week development + infrastructure
-- **Team Size:** Maximum 7 people (4-6 engineers + PM + designer)
-- **Timeline:** 20 weeks to beta launch (non-negotiable)
-- **API Costs:** Must stay under $15k/month during beta
+### Business
+- Budget: $50k dev + $15k/month infra (beta)
+- Team: Max 7 people
+- Timeline: 20 weeks (fixed)
+- API costs: <$15k/month in beta
 
-### Legal Constraints
-- **LLM Provider ToS:** Must comply with all provider terms
-- **Data Privacy:** GDPR and CCPA compliance required
-- **Content Policy:** Must moderate harmful content
-- **Liability:** Disclaimer for AI-generated content
-
-### User Constraints
-- **Expertise:** Users must understand complex topics (not for novices)
-- **Time:** Discussions take 5-15 minutes (not instant)
-- **Cost:** Premium feature, not free-tier friendly at scale
-
----
-
-## Project Communication
-
-### Channels
-- **Slack:** #socratic-llm-dev (development), #socratic-llm-alerts (monitoring)
-- **Email:** team@socratic-llm.ai
-- **Wiki:** Confluence or Notion for design docs
-- **Tickets:** GitHub Issues, Linear, or Jira
-
-### Meetings
-- **Daily Standups:** 15 min, 9:30 AM
-- **Sprint Planning:** Monday, 2 hours
-- **Sprint Review:** Friday, 1 hour
-- **Retrospective:** Friday, 30 min
-
-### Status Updates
-- Weekly update email to stakeholders
-- Monthly all-hands demo
-- Quarterly roadmap review
+### Legal
+- Comply with LLM provider ToS
+- GDPR/CCPA required
+- Content moderation required
+- AI-generated content disclaimer
 
 ---
 
 ## Incident Response
 
-### Severity Levels
-- **P0 (Critical):** Service down, data loss - Resolve in 1 hour
-- **P1 (High):** Major feature broken - Resolve in 4 hours
-- **P2 (Medium):** Minor feature broken - Resolve in 24 hours
-- **P3 (Low):** Cosmetic issue - Resolve in 1 week
+| Severity | SLA | Action |
+|----------|-----|--------|
+| **P0** | 1 hour | Service down, data loss |
+| **P1** | 4 hours | Major feature broken |
+| **P2** | 24 hours | Minor feature broken |
+| **P3** | 1 week | Cosmetic issue |
 
-### On-Call Rotation
-- 1 week rotations
-- Compensation: Time off or additional pay
-- Maximum 2 pages per week (otherwise add capacity)
-
-### Post-Mortem
-Required for P0 and P1 incidents:
+### Post-Mortem (P0/P1)
 - Root cause analysis
-- Timeline of events
-- Action items (prevent recurrence)
-- Blameless culture
+- Timeline
+- Action items
+- Blameless
 
 ---
 
-## Licensing
+## Communication
 
-### Project License
-- **Code:** MIT License (open source)
-- **Documentation:** CC BY 4.0
+### Daily
+- Standup: 9:30 AM, 15 min
+- Slack: #socratic-dev, #socratic-alerts
 
-### Dependencies
-- Audit all dependency licenses
-- Avoid GPL (copyleft) dependencies
-- Prefer MIT, Apache 2.0, BSD
-
-### LLM Provider Licenses
-- Comply with all API terms of service
-- Commercial use allowed for all providers
-- User data handling per provider policies
+### Weekly
+- Sprint Planning: Monday, 2h
+- Sprint Review: Friday, 1h
+- Retrospective: Friday, 30min
+- Status email to stakeholders
 
 ---
 
-## Success Criteria for Constitution
-
-This constitution is successful if:
-- ✅ All team members understand and follow standards
-- ✅ Code reviews reference constitution requirements
-- ✅ Automated checks enforce standards (CI)
-- ✅ New team members onboarded with constitution
-- ✅ Constitution updated quarterly based on learnings
-
----
-
-**Last Updated:** 2025-11-12
-**Version:** 1.0
-**Owner:** Engineering Lead
-
-Use this document with:
-```bash
-/constitute docs/inputs/PROJECT_CONSTITUTION.md
-```
+**Version:** 1.0 | **Updated:** 2025-11-12

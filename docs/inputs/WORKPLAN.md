@@ -1,815 +1,514 @@
 # Implementation Workplan
-## Socratic LLM Discussion Forum
+**Use with:** `/plan docs/inputs/WORKPLAN.md`
 
-**Version:** 1.0
-**Timeline:** 20 weeks (5 months)
-**Team Size:** 4-6 engineers + PM + designer (7 total)
-**Budget:** $50k development + $15k/month infrastructure (beta)
+**Timeline:** 20 weeks | **Team:** 7 (4-6 engineers + PM + designer) | **Budget:** $50k dev + $15k/month infra
 
 ---
 
-## Overview
+## Phases Overview
 
-Build multi-agent AI discussion platform in 4 phases:
-1. **Phase 0:** Foundation (Weeks 1-2)
-2. **Phase 1:** Core MVP (Weeks 3-8)
-3. **Phase 2:** Socratic + Judges (Weeks 9-12)
-4. **Phase 3:** Advanced Features (Weeks 13-16)
-5. **Phase 4:** Beta Launch (Weeks 17-20)
+| Phase | Weeks | Goal | Milestone |
+|-------|-------|------|-----------|
+| **0: Foundation** | 1-2 | Infrastructure + API access | CI/CD + DB + APIs ready |
+| **1: Core MVP** | 3-8 | Working discussion (3+ agents) | End-to-end discussion <5 min |
+| **2: Socratic + Judges** | 9-12 | Socratic method + judge panel | >70% consensus, CARE >10% better |
+| **3: Advanced** | 13-16 | 7+ LLMs + polish + security | <60s first round, audit passed |
+| **4: Beta Launch** | 17-20 | 50+ users, iteration | NPS >40, launch ready |
 
 ---
 
-## Phase 0: Foundation & Setup
-**Duration:** Weeks 1-2
-**Goal:** Development environment and infrastructure ready
+## Phase 0: Foundation (Weeks 1-2)
 
 ### Week 1: Infrastructure
 
-#### Tasks
-- [ ] Initialize Git repository with branch protection rules
-- [ ] Set up CI/CD pipeline (GitHub Actions)
-- [ ] Configure Docker development environment
-- [ ] Provision staging and production environments (AWS/GCP)
-- [ ] Set up infrastructure as code (Terraform)
-- [ ] Configure monitoring (Datadog or Prometheus + Grafana)
-- [ ] Set up centralized logging (ELK or CloudWatch)
-- [ ] Create monorepo structure (backend, frontend, shared)
-
-#### Deliverables
-- Docker Compose for local development
-- CI/CD pipeline running (build, test, lint)
-- Staging environment deployed
-- Monitoring dashboards configured
-
-#### Team
-- DevOps Engineer (lead)
-- Backend Lead (support)
+| Task | Owner | Deliverable |
+|------|-------|-------------|
+| Git repo + CI/CD (GitHub Actions) | DevOps | Pipeline operational |
+| Docker dev environment | DevOps | docker-compose.yml |
+| Staging/prod environments (AWS/GCP) | DevOps | Deployed |
+| Monitoring (Datadog/Prometheus) | DevOps | Dashboards configured |
+| Monorepo structure (backend, frontend, shared) | Backend Lead | Project scaffolding |
 
 ### Week 2: API Access & Database
 
-#### Tasks
-- [ ] Secure LLM API access: OpenAI, Anthropic, Perplexity
-- [ ] Secure tool APIs: Alpha Vantage, Wolfram Alpha
-- [ ] Set up code execution sandbox (E2B or Modal)
-- [ ] Implement LiteLLM for unified LLM interface
-- [ ] Test all API connections
-- [ ] Set up API key management (AWS Secrets Manager)
-- [ ] Provision PostgreSQL 15+ with JSON support
-- [ ] Set up Redis 7.2+ for caching
-- [ ] Provision S3/blob storage for artifacts
-- [ ] Design database schema v1.0 (discussions, contributions, users)
-- [ ] Create migration system (Alembic or Prisma)
+| Task | Owner | Deliverable |
+|------|-------|-------------|
+| LLM APIs: OpenAI, Claude, Perplexity | Backend Lead | Keys + LiteLLM integration |
+| Tool APIs: Alpha Vantage, Wolfram | Backend Lead | Keys + test calls |
+| Code sandbox (E2B/Modal) | Backend Lead | Sandbox operational |
+| PostgreSQL 15+ + Redis 7.2+ | Backend Lead | Provisioned |
+| Database schema v1.0 | Backend Lead | Migrations working |
+| Secrets management (AWS Secrets Manager) | DevOps | All keys secured |
 
-#### Deliverables
-- All LLM APIs accessible and tested
-- Database schema v1.0 deployed
-- Secrets management operational
-- API abstraction layer working
-
-#### Team
-- Backend Lead (lead)
-- DevOps Engineer (support)
-
-### Phase 0 Success Criteria
-- ✅ Full CI/CD pipeline operational
+**Success Criteria:**
+- ✅ CI/CD pipeline operational
 - ✅ All API keys secured and tested
-- ✅ Database migrations working
-- ✅ Local development environment functional
+- ✅ Database schema v1.0 deployed
+- ✅ Local dev environment functional
 
 ---
 
-## Phase 1: Core MVP
-**Duration:** Weeks 3-8 (6 weeks)
-**Goal:** Working end-to-end discussion with 3+ agents, basic UI
+## Phase 1: Core MVP (Weeks 3-8)
 
 ### Sprint 1 (Weeks 3-4): Agent Runtime
 
-#### Tasks
-- [ ] Implement Agent base class with LLM abstraction
-- [ ] Create AgentPool for managing 3-10 agents
-- [ ] Integrate LiteLLM (OpenAI, Claude, Perplexity)
-- [ ] Add agent configuration (model, temperature, max_tokens)
-- [ ] Implement contribution formatting and validation
-- [ ] Add token counting and budget management (2K/contribution, 50K/discussion)
-- [ ] Create agent state management (memory, context)
-- [ ] Design base system prompts for agent roles
-- [ ] Implement prompt injection prevention
-- [ ] Write unit tests (>80% coverage)
-- [ ] Write integration tests with real LLM APIs
+**Tasks:**
+- [ ] Agent base class + AgentPool (3-10 agents)
+- [ ] LiteLLM integration (OpenAI, Claude, Perplexity)
+- [ ] Agent config (model, temperature, max_tokens)
+- [ ] Contribution formatting + validation
+- [ ] Token counting + budget (2K/contribution, 50K/discussion)
+- [ ] Agent state management
+- [ ] System prompts for roles
+- [ ] Prompt injection prevention
+- [ ] Unit tests (>80% coverage)
+- [ ] Integration tests with real LLM APIs
 
-#### Deliverables
-- `agents/base.py` - Agent base class
-- `agents/pool.py` - AgentPool manager
-- `agents/prompts/` - System prompt templates
-- Integration tests passing with GPT-4, Claude, Perplexity
+**Deliverables:** `agents/base.py`, `agents/pool.py`, `agents/prompts/`
 
-#### Acceptance Criteria
-- Create 5 agents with diverse LLM providers
+**Acceptance:**
+- Create 5 agents with diverse providers
 - Each agent generates valid contribution (<2K tokens)
-- Token budget enforced (fails if exceeded)
-- Prompt injection attempts blocked
+- Token budget enforced
+- Prompt injection blocked
 
-#### Team
-- Backend Engineer #1 (lead)
-- Backend Engineer #2 (support)
+**Team:** Backend #1 (lead), Backend #2
+
+---
 
 ### Sprint 2 (Weeks 5-6): Tool Integration
 
-#### Tasks
-- [ ] Design tool interface and registry (MCP standard)
-- [ ] Implement tool result caching (Redis, 15 min TTL)
-- [ ] Add tool execution timeout handling (30s)
-- [ ] Implement "explain before calling" pattern
-- [ ] Add security layer (input sanitization)
-- [ ] **Perplexity Sonar Pro:** Web search tool
-- [ ] **Alpha Vantage:** Stock data retrieval tool
-- [ ] **Code Sandbox:** Python execution (E2B/Modal)
-- [ ] **Wolfram Alpha:** Mathematical computations
-- [ ] Integrate tool calling into agent workflow
-- [ ] Implement tool result parsing and formatting
-- [ ] Add retry logic for failed tool calls (2 retries, exponential backoff)
-- [ ] Create tool usage logging and metrics
-- [ ] Write unit tests for each tool
-- [ ] Write integration tests with real APIs
+**Tasks:**
+- [ ] Tool interface + registry (MCP standard)
+- [ ] Tool result caching (Redis, 15min TTL)
+- [ ] Timeout handling (30s)
+- [ ] "Explain before calling" pattern
+- [ ] Security layer (input sanitization)
+- [ ] **Tools:** Perplexity Sonar Pro, Alpha Vantage, Code Sandbox, Wolfram Alpha
+- [ ] Tool calling in agent workflow
+- [ ] Result parsing
+- [ ] Retry logic (2× exponential backoff)
+- [ ] Usage logging
+- [ ] Unit + integration tests
 
-#### Deliverables
-- `tools/base.py` - Tool interface (MCP)
-- `tools/perplexity.py`, `tools/alpha_vantage.py`, `tools/code_sandbox.py`, `tools/wolfram.py`
-- `tools/registry.py` - Tool registry with schemas
-- Tool integration tests passing
+**Deliverables:** `tools/base.py`, `tools/{perplexity,alpha_vantage,code_sandbox,wolfram}.py`, `tools/registry.py`
 
-#### Acceptance Criteria
-- Agent successfully calls Perplexity and receives results
+**Acceptance:**
+- Agent calls Perplexity and receives results
 - Agent fetches stock data from Alpha Vantage
 - Agent executes Python code in sandbox
-- Tool failures gracefully handled with fallback
+- Tool failures handled gracefully
 
-#### Team
-- Backend Engineer #2 (lead)
-- Backend Engineer #1 (support)
-
-### Sprint 3 (Weeks 7-8): Discussion Orchestration + Basic UI
-
-#### Backend Tasks
-- [ ] Create DiscussionWorkspace model
-- [ ] Implement discussion lifecycle (4 phases)
-- [ ] Build turn-taking logic (round-robin)
-- [ ] Add discussion state management
-- [ ] Implement simple consensus detection (keyword overlap >80%)
-- [ ] Create termination condition checking (consensus, max rounds, stable state)
-- [ ] Add discussion history tracking
-- [ ] Build context window management (truncation, summarization)
-- [ ] Implement smart context selection (recent rounds prioritized)
-- [ ] Create evidence repository
-- [ ] Define database models (Discussion, Contribution, ToolCall, Citation)
-- [ ] Write orchestration unit tests
-- [ ] Write full discussion integration test
-
-#### Frontend Tasks
-- [ ] Initialize Next.js 14+ project (App Router, TypeScript)
-- [ ] Set up shadcn/ui + Tailwind CSS
-- [ ] Create home page with discussion input form
-- [ ] Build discussion progress page with SSE
-- [ ] Implement agent contribution cards (expandable)
-- [ ] Add progress indicator (round counter, consensus %)
-- [ ] Create results page with summary display
-- [ ] Add loading states and skeletons
-- [ ] Implement basic routing
-- [ ] Write frontend E2E tests (Playwright)
-
-#### API Tasks
-- [ ] Create FastAPI application structure
-- [ ] Implement `/discussions` POST endpoint (start discussion)
-- [ ] Implement `/discussions/{id}` GET endpoint (get discussion)
-- [ ] Implement `/discussions/{id}/stream` SSE endpoint (real-time updates)
-- [ ] Add JWT authentication middleware
-- [ ] Add rate limiting (100 req/min per user)
-- [ ] Write API integration tests
-
-#### Deliverables
-- `orchestration/discussion_manager.py` - Main orchestrator
-- `orchestration/phase_controller.py` - Phase transitions
-- `orchestration/consensus_tracker.py` - Consensus detection
-- `models/discussion.py`, `models/contribution.py` - Data models
-- `api/main.py` - FastAPI app
-- `api/routes/discussions.py` - Discussion endpoints
-- `frontend/` - Full Next.js app with basic UI
-- End-to-end test: User starts discussion → 5 agents debate → consensus reached → results displayed
-
-#### Acceptance Criteria
-- User enters question, starts discussion with defaults (5 agents, 5 rounds)
-- Discussion progresses through 4 phases automatically
-- Agents make tool calls successfully
-- Simple consensus detected (>80% keyword overlap)
-- Discussion terminates when consensus reached or max rounds
-- User sees real-time updates via SSE
-- Results page shows summary, evidence, transcript
-- Full discussion completes in <5 minutes
-
-#### Team
-- Backend Lead + Backend Engineer #1 + Backend Engineer #2
-- Frontend Engineer (lead)
-- Designer (UI mockups)
-
-### Phase 1 Success Criteria
-- ✅ Complete end-to-end discussion with 3+ agents
-- ✅ At least 2 tools functional (Perplexity, Alpha Vantage)
-- ✅ Basic web UI working (start, view progress, see results)
-- ✅ Discussion stored in database
-- ✅ Simple consensus detection operational
-- ✅ Unit test coverage >80%, integration >70%
-- ✅ Discussion completes in <5 minutes (p95)
+**Team:** Backend #2 (lead), Backend #1
 
 ---
 
-## Phase 2: Socratic Method & Judge Panel
-**Duration:** Weeks 9-12 (4 weeks)
-**Goal:** Structured Socratic methodology + ensemble judges + CARE aggregation
+### Sprint 3 (Weeks 7-8): Orchestration + UI
+
+**Backend Tasks:**
+- [ ] DiscussionWorkspace model
+- [ ] Discussion lifecycle (4 phases)
+- [ ] Turn-taking logic (round-robin)
+- [ ] State management
+- [ ] Simple consensus detection (keyword overlap >80%)
+- [ ] Termination conditions (consensus, max rounds, stable state)
+- [ ] History tracking
+- [ ] Context window management (truncation, summarization)
+- [ ] Evidence repository
+- [ ] Database models (Discussion, Contribution, ToolCall, Citation)
+- [ ] Orchestration tests
+- [ ] Full discussion integration test
+
+**Frontend Tasks:**
+- [ ] Next.js 14+ project (App Router, TypeScript)
+- [ ] shadcn/ui + Tailwind CSS
+- [ ] Home page (discussion input)
+- [ ] Progress page with SSE
+- [ ] Agent contribution cards (expandable)
+- [ ] Progress indicator (round counter, consensus %)
+- [ ] Results page (summary display)
+- [ ] Loading states
+- [ ] Routing
+- [ ] E2E tests (Playwright)
+
+**API Tasks:**
+- [ ] FastAPI app structure
+- [ ] `/discussions` POST (start discussion)
+- [ ] `/discussions/{id}` GET (get discussion)
+- [ ] `/discussions/{id}/stream` SSE (real-time updates)
+- [ ] JWT auth middleware
+- [ ] Rate limiting (100 req/min)
+- [ ] API integration tests
+
+**Deliverables:**
+- `orchestration/discussion_manager.py`, `orchestration/phase_controller.py`, `orchestration/consensus_tracker.py`
+- `models/discussion.py`, `models/contribution.py`
+- `api/main.py`, `api/routes/discussions.py`
+- `frontend/` - Full Next.js app
+
+**Acceptance:**
+- User enters question → discussion starts (5 agents, 5 rounds)
+- Discussion progresses through 4 phases
+- Agents make tool calls successfully
+- Simple consensus detected (>80%)
+- Discussion terminates correctly
+- User sees real-time updates (SSE)
+- Results page shows summary + evidence + transcript
+- Discussion <5 min
+
+**Team:** All engineers, Frontend (lead for UI), Designer
+
+**Phase 1 Success Criteria:**
+- ✅ End-to-end discussion with 3+ agents
+- ✅ 2+ tools functional
+- ✅ Basic UI working
+- ✅ Unit >80%, integration >70%
+- ✅ Discussion <5 min (p95)
+
+---
+
+## Phase 2: Socratic + Judges (Weeks 9-12)
 
 ### Sprint 4 (Weeks 9-10): Socratic Framework
 
-#### Tasks
-- [ ] Implement IntelliChain-inspired question reformulation
-- [ ] Create assumption identification prompts
-- [ ] Design clarification question templates
-- [ ] Add logical consistency checking prompts
-- [ ] Implement evidence demand patterns
-- [ ] Add strategic engagement (agents choose what to respond to)
-- [ ] Implement position updating (agents change views when persuaded)
-- [ ] Create confidence scoring for claims (0-1 scale)
-- [ ] Add explicit reasoning chains (chain-of-thought)
-- [ ] Implement CONSENSAGENT sycophancy mitigation
-  - Phase 1: independent analysis (no visibility)
+**Tasks:**
+- [ ] IntelliChain question reformulation
+- [ ] Assumption identification prompts
+- [ ] Clarification question templates
+- [ ] Logical consistency checking
+- [ ] Evidence demand patterns
+- [ ] Strategic engagement (agents choose responses)
+- [ ] Position updating (agents change views)
+- [ ] Confidence scoring (0-1)
+- [ ] Chain-of-thought reasoning
+- [ ] CONSENSAGENT sycophancy mitigation
+  - Independent analysis phase
   - Conformity bias detection
   - Diverse perspective enforcement
-- [ ] Create "devil's advocate" agent role
-- [ ] Set up vector database (Pinecone or Weaviate)
-- [ ] Store key concepts and relationships in knowledge graph
-- [ ] Implement semantic search for context retrieval
+- [ ] Devil's advocate role
+- [ ] Vector DB (Pinecone/Weaviate)
+- [ ] Knowledge graph (concepts, relationships)
+- [ ] Semantic search for context
 - [ ] Link related discussions
-- [ ] Update agent prompts with Socratic patterns
-- [ ] Write tests for Socratic questioning quality
-- [ ] Manual evaluation: Review 10 discussions for Socratic elements
+- [ ] Update agent prompts
+- [ ] Manual evaluation (10 discussions)
 
-#### Deliverables
-- `agents/socratic_prompts.py` - Socratic prompt templates
-- `agents/socratic_engine.py` - Question reformulation, assumption detection
-- `agents/position_tracker.py` - Track agent position changes
-- `knowledge_graph/vector_store.py` - Vector DB integration
-- `knowledge_graph/semantic_search.py` - Context retrieval
-- Updated agent system prompts with Socratic methodology
+**Deliverables:**
+- `agents/socratic_prompts.py`, `agents/socratic_engine.py`, `agents/position_tracker.py`
+- `knowledge_graph/vector_store.py`, `knowledge_graph/semantic_search.py`
 
-#### Acceptance Criteria
+**Acceptance:**
 - Agents pose probing questions (>1 per contribution)
 - Agents identify assumptions explicitly
-- Agents update positions when presented with better evidence
-- Sycophancy mitigation prevents premature consensus (tested)
-- Devil's advocate agent challenges majority view
-- Knowledge graph stores and retrieves discussion concepts
+- Agents update positions with better evidence
+- Sycophancy mitigation prevents premature consensus
+- Devil's advocate challenges majority
+- Knowledge graph stores/retrieves concepts
 
-#### Team
-- Backend Engineer #1 (lead - Socratic engine)
-- Backend Engineer #2 (support - knowledge graph)
-- ML Engineer (optional - vector DB optimization)
-
-### Sprint 5 (Weeks 11-12): Judge Panel + CARE Aggregation
-
-#### Tasks
-- [ ] Create Judge agent subclass (extends Agent)
-- [ ] Design judge evaluation criteria (5 dimensions):
-  - Factual accuracy (0-10)
-  - Logical coherence (0-10)
-  - Novel insights (0-10)
-  - Engagement quality (0-10)
-  - Consensus progress (0-10)
-- [ ] Implement structured judge output format (JSON schema)
-- [ ] Add quality scoring per agent contribution
-- [ ] Implement JudgePanel class (manages 3-5 judges)
-- [ ] Add judge rotation logic (diverse LLM providers)
-- [ ] Implement CARE aggregation algorithm (NeurIPS 2025 paper)
-- [ ] Build judge correlation matrix from historical data
-- [ ] Add systematic bias detection (verbosity, position effects)
-- [ ] Create adaptive weighting system
-- [ ] Replace keyword-based consensus with judge-based consensus
-- [ ] Implement consensus level calculation (0-1 scale, weighted)
-- [ ] Create agreed/debated points extraction
-- [ ] Add confidence intervals for consensus claims
-- [ ] Integrate judge feedback into next round context
-- [ ] Implement judge disagreement handling
-- [ ] Write unit tests for CARE algorithm
-- [ ] Write integration tests for judge panel
-- [ ] Benchmark: Compare CARE vs. majority voting (>10% improvement target)
-- [ ] Update UI to show judge feedback per round
-- [ ] Add consensus visualization (chart showing evolution)
-
-#### Deliverables
-- `judges/base.py` - Judge agent class
-- `judges/panel.py` - JudgePanel manager
-- `judges/care_aggregation.py` - CARE algorithm implementation
-- `judges/schemas.py` - Judge evaluation JSON schemas
-- Updated orchestration to use judge-based consensus
-- Frontend updates: Judge feedback display, consensus chart
-
-#### Acceptance Criteria
-- Judge panel (3-5 judges) evaluates each round
-- Each judge scores contributions across 5 dimensions
-- CARE aggregation computes consensus with bias mitigation
-- Consensus detection improved (>70% discussions reach >80% agreement)
-- CARE outperforms majority vote by >10% (MAE metric)
-- Judge feedback influences next round (agents respond to feedback)
-- UI shows judge scores and consensus evolution
-
-#### Team
-- Backend Engineer #2 (lead - judge panel)
-- Backend Engineer #1 (support - CARE algorithm)
-- Frontend Engineer (UI updates)
-
-### Sprint 6 (Week 12): Parlant Integration
-
-#### Tasks
-- [ ] Install and configure Parlant framework (v3.0+)
-- [ ] Create behavioral guidelines for agent roles:
-  - Rigorous Analyst guideline
-  - Critical Challenger guideline
-  - Evidence-Focused Researcher guideline
-- [ ] Define discussion journey templates for phases
-- [ ] Set up tool orchestration via Parlant
-- [ ] Create canned response templates:
-  - Evidence request template
-  - Assumption challenge template
-  - Position update template
-  - Consensus proposal template
-- [ ] Integrate Parlant into agent workflow
-- [ ] Test guideline enforcement
-- [ ] Validate journey flow
-- [ ] Measure response quality improvement (manual evaluation)
-
-#### Deliverables
-- `parlant/guidelines/` - Behavioral guideline definitions
-- `parlant/journeys/` - Discussion phase journey templates
-- `parlant/responses/` - Canned response library
-- Integration with agent runtime
-
-#### Acceptance Criteria
-- Agents follow behavioral guidelines consistently
-- Journey templates control phase transitions
-- Canned responses reduce variance in common scenarios
-- Measurable quality improvement (>20% better via manual review)
-
-#### Team
-- Backend Lead (lead)
-- Backend Engineer #1 (support)
-
-### Phase 2 Success Criteria
-- ✅ Structured Socratic questioning evident in debates
-- ✅ Judge panel (3-5 judges) operational
-- ✅ CARE aggregation >10% better than majority vote
-- ✅ Consensus detection significantly improved (>70% reach >80%)
-- ✅ Parlant framework integrated
-- ✅ Debate quality improvement >30% vs. Phase 1 (manual evaluation)
-- ✅ Unit test coverage maintained >80%
+**Team:** Backend #1 (lead), Backend #2
 
 ---
 
-## Phase 3: Advanced Features & Polish
-**Duration:** Weeks 13-16 (4 weeks)
-**Goal:** 7+ LLM providers, advanced UI, performance optimization, security hardening
+### Sprint 5 (Weeks 11-12): Judge Panel + CARE + Parlant
 
-### Sprint 7 (Weeks 13-14): Extended LLM Support + Tools
+**Judge Panel Tasks:**
+- [ ] Judge agent subclass
+- [ ] 5-dimension evaluation criteria (factual, logical, novel, engagement, consensus)
+- [ ] Structured judge output (JSON schema)
+- [ ] Quality scoring per contribution
+- [ ] JudgePanel class (3-5 judges)
+- [ ] Judge rotation (diverse providers)
+- [ ] CARE aggregation algorithm (NeurIPS 2025)
+- [ ] Judge correlation matrix (historical data)
+- [ ] Systematic bias detection (verbosity, position)
+- [ ] Adaptive weighting
+- [ ] Replace keyword consensus with judge-based
+- [ ] Consensus level calculation (0-1, weighted)
+- [ ] Agreed/debated points extraction
+- [ ] Confidence intervals
+- [ ] Judge feedback integration into next round
+- [ ] Judge disagreement handling
+- [ ] Unit tests (CARE algorithm)
+- [ ] Integration tests (judge panel)
+- [ ] Benchmark: CARE vs. majority vote (>10% target)
+- [ ] UI: Judge feedback display, consensus chart
 
-#### Tasks
-- [ ] Google Gemini 2.0 integration (LiteLLM)
-- [ ] DeepSeek V3 / Reasoner integration
-- [ ] Moonshot AI (Kimi K2) integration
-- [ ] Meta Llama integration (via Together AI or Replicate)
-- [ ] Update LiteLLM configuration for all providers
-- [ ] Handle varying context window sizes (8K-200K)
+**Parlant Tasks:**
+- [ ] Install Parlant 3.0+
+- [ ] Behavioral guidelines (Rigorous Analyst, Critical Challenger, Evidence-Focused Researcher)
+- [ ] Journey templates (discussion phases)
+- [ ] Tool orchestration via Parlant
+- [ ] Canned responses (evidence request, assumption challenge, position update, consensus proposal)
+- [ ] Integrate into agent workflow
+- [ ] Test guideline enforcement
+- [ ] Validate journey flow
+- [ ] Measure quality improvement (manual)
+
+**Deliverables:**
+- `judges/base.py`, `judges/panel.py`, `judges/care_aggregation.py`, `judges/schemas.py`
+- `parlant/guidelines/`, `parlant/journeys/`, `parlant/responses/`
+- Frontend: Judge feedback UI, consensus chart
+
+**Acceptance:**
+- Judge panel (3-5) evaluates each round
+- Judges score across 5 dimensions
+- CARE aggregation with bias mitigation
+- Consensus detection improved (>70% reach >80%)
+- CARE outperforms majority vote by >10%
+- Judge feedback influences next round
+- UI shows scores + consensus evolution
+- Agents follow behavioral guidelines
+- Quality improvement >20% (manual review)
+
+**Team:** Backend #2 (lead - judges), Backend #1 (CARE + Parlant), Frontend (UI)
+
+**Phase 2 Success Criteria:**
+- ✅ Socratic questioning evident
+- ✅ Judge panel operational
+- ✅ CARE >10% better than baseline
+- ✅ Consensus rate >70%
+- ✅ Parlant integrated
+- ✅ Quality improvement >30% vs. Phase 1
+
+---
+
+## Phase 3: Advanced Features (Weeks 13-16)
+
+### Sprint 6 (Weeks 13-14): Extended LLM + Tools
+
+**Tasks:**
+- [ ] Gemini 2.0 integration
+- [ ] DeepSeek V3/Reasoner integration
+- [ ] Kimi K2 integration
+- [ ] Llama integration (via Together AI/Replicate)
+- [ ] Update LiteLLM config
+- [ ] Handle varying context windows (8K-200K)
 - [ ] Adapt to different tool calling formats
-- [ ] Optimize prompts per provider (provider-specific tuning)
-- [ ] Implement provider fallbacks (if one fails, try another)
-- [ ] Add Yahoo Finance API integration (financial data fallback)
-- [ ] Add Brave Search API integration (web search fallback)
-- [ ] Enhance code sandbox: add matplotlib, seaborn (visualizations)
-- [ ] Implement visualization generation from data
+- [ ] Provider-specific prompt optimization
+- [ ] Provider fallbacks
+- [ ] Yahoo Finance API (fallback)
+- [ ] Brave Search API (fallback)
+- [ ] Code sandbox: add matplotlib, seaborn
+- [ ] Visualization generation
 - [ ] Cross-provider compatibility tests
 - [ ] Performance benchmarking per provider
-- [ ] Cost analysis per provider (track spending)
+- [ ] Cost analysis per provider
 
-#### Deliverables
-- 7+ LLM providers integrated and tested
-- Provider fallback logic operational
-- Enhanced tool ecosystem (6+ tools)
-- Visualization generation working
-- Cost tracking dashboard
+**Deliverables:** 7+ LLM providers, enhanced tools (6+), visualizations, cost tracking
 
-#### Acceptance Criteria
-- All 7 providers work interchangeably
-- System falls back gracefully when provider unavailable
-- Visualizations generated and embedded in results
-- Cost per discussion tracked accurately
+**Acceptance:**
+- All 7 providers interchangeable
+- Graceful fallback when provider unavailable
+- Visualizations generated and embedded
+- Cost tracked accurately
 
-#### Team
-- Backend Engineer #1 (lead - LLM providers)
-- Backend Engineer #2 (support - tools)
+**Team:** Backend #1 (lead), Backend #2
 
-### Sprint 8 (Weeks 15-16): Advanced UI + Performance + Security
+---
 
-#### Frontend Tasks
-- [ ] Advanced configuration modal:
-  - Agent count slider (3-10)
-  - LLM provider selection per agent
-  - Tool selection checkboxes
-  - Debate style dropdown (Socratic, Adversarial, Collaborative)
-  - Max rounds slider (2-10)
-- [ ] Discussion templates:
-  - Investment Analysis template
-  - Scientific Research template
-  - Geopolitical Analysis template
-  - Technology Evaluation template
-  - Custom template builder
-- [ ] Enhanced discussion view:
-  - Collapsible agent contributions
-  - Inline citation popups
-  - Evidence repository sidebar
-  - Consensus tracker visualization (chart)
-  - Round-by-round consensus evolution graph
-- [ ] Result enhancements:
-  - Executive summary (AI-generated)
-  - Key insights extraction
-  - Visual consensus evolution
-  - Dissenting views section
-  - Export options (PDF, Markdown, JSON)
-- [ ] User features:
-  - Discussion history page
-  - Saved templates
-  - Favorite discussions
-  - Share discussion links (public/private)
-- [ ] Mobile responsive design (bonus)
+### Sprint 7 (Weeks 15-16): Advanced UI + Performance + Security
 
-#### Performance Tasks
-- [ ] Implement parallel agent execution (asyncio)
-- [ ] Add aggressive caching (Redis):
-  - Tool results (15 min TTL)
-  - LLM responses for repeated queries (1 hour TTL)
-- [ ] Optimize database queries:
-  - Add indexes (foreign keys, discussion_id, created_at)
-  - Connection pooling (pgbouncer)
-- [ ] Implement request batching for LLM APIs
-- [ ] Add CDN for static assets (CloudFront or Cloudflare)
+**Frontend Tasks:**
+- [ ] Advanced config modal (agents, LLMs, tools, style, rounds)
+- [ ] Discussion templates (Investment, Research, Geopolitical, Tech) + custom builder
+- [ ] Enhanced view (collapsible contributions, inline citations, evidence sidebar, consensus chart)
+- [ ] Result enhancements (exec summary, key insights, visual evolution, dissenting views, export PDF/MD/JSON)
+- [ ] User features (history, saved templates, favorites, share links)
+- [ ] Mobile responsive (bonus)
+
+**Performance Tasks:**
+- [ ] Parallel agent execution (asyncio)
+- [ ] Aggressive caching (Redis: tool results 15min, LLM responses 1h)
+- [ ] Optimize DB queries (indexes, connection pooling)
+- [ ] Request batching for LLM APIs
+- [ ] CDN for static assets
 - [ ] Lazy load UI components
-- [ ] Code splitting (Next.js automatic + manual)
-- [ ] Load testing: Simulate 100 concurrent discussions
-- [ ] Performance profiling (identify bottlenecks)
-- [ ] Optimize based on profiling results
+- [ ] Code splitting
+- [ ] Load testing (100 concurrent discussions)
+- [ ] Performance profiling
+- [ ] Optimize based on profiling
 
-#### Security Tasks
-- [ ] Implement rate limiting per user (100 req/min)
-- [ ] Add prompt injection detection (heuristics + ML)
-- [ ] Secure API key storage (AWS Secrets Manager)
-- [ ] Input sanitization for all user inputs
-- [ ] Output content filtering (harmful content detection)
-- [ ] HTTPS enforcement (redirect HTTP to HTTPS)
-- [ ] CORS configuration (whitelist frontend domain)
+**Security Tasks:**
+- [ ] Rate limiting per user (100 req/min)
+- [ ] Prompt injection detection
+- [ ] Secure API keys (AWS Secrets Manager)
+- [ ] Input sanitization
+- [ ] Output content filtering
+- [ ] HTTPS enforcement
+- [ ] CORS configuration
 - [ ] Security headers (HSTS, X-Frame-Options, CSP)
 - [ ] Dependency scanning (Dependabot, Snyk)
 - [ ] Penetration testing (external audit)
-- [ ] Address all security findings (P0/P1)
+- [ ] Address all P0/P1 findings
 
-#### Monitoring Tasks
-- [ ] Add detailed structured logging (all components)
-- [ ] Implement distributed tracing (OpenTelemetry)
-- [ ] Create custom Grafana dashboards:
-  - Discussion metrics (count, duration, consensus rate)
-  - LLM API metrics (latency, success rate, cost)
-  - Tool usage metrics
-  - Error rates
-- [ ] Set up alerts:
-  - P0: Error rate >5% (page on-call)
-  - P1: Latency >2x baseline (Slack alert)
-  - P2: Cost >$20k/month (email)
-- [ ] Add user analytics (PostHog or Mixpanel)
+**Monitoring Tasks:**
+- [ ] Detailed structured logging
+- [ ] Distributed tracing (OpenTelemetry)
+- [ ] Grafana dashboards (discussion metrics, LLM metrics, tool usage, errors)
+- [ ] Alerts (P0: error >5%, P1: latency >2x, P2: cost >$20k/month)
+- [ ] User analytics (PostHog/Mixpanel)
 
-#### Deliverables
-- Advanced UI with all features
-- Discussion templates functional
-- Performance optimized (<60s first round)
-- Security hardened (pen test passed)
-- Full monitoring operational
-- Load test results (100 concurrent discussions handled)
+**Deliverables:** Advanced UI, templates, performance <60s first round, security audit passed, monitoring operational
 
-#### Acceptance Criteria
-- Discussion completes in <60s to first round (p95)
-- Total discussion <10 min (p95)
-- Lighthouse score >90
-- Security audit passed (no P0/P1 findings)
-- 100 concurrent discussions handled without degradation
+**Acceptance:**
+- Discussion <60s to first round (p95)
+- Total <10 min (p95)
+- Lighthouse >90
+- Security audit passed (no P0/P1)
+- 100 concurrent discussions handled
 
-#### Team
-- Frontend Engineer (lead - UI)
-- Backend Engineer #1 (performance)
-- Backend Engineer #2 (security)
-- DevOps Engineer (monitoring)
-- Designer (UI polish)
+**Team:** Frontend (lead), Backend #1 (perf), Backend #2 (security), DevOps (monitoring), Designer
 
-### Phase 3 Success Criteria
-- ✅ 7+ LLM providers supported
-- ✅ Advanced UI with all features functional
-- ✅ Discussion templates working
-- ✅ Performance: <60s first round, <10 min total (p95)
-- ✅ Security: Penetration test passed
-- ✅ Monitoring: All dashboards and alerts operational
-- ✅ Load test: 100 concurrent discussions handled
+**Phase 3 Success Criteria:**
+- ✅ 7+ providers
+- ✅ Advanced UI functional
+- ✅ Templates working
+- ✅ Performance: <60s first round
+- ✅ Security audit passed
+- ✅ Monitoring operational
+- ✅ Load test: 100 concurrent
 
 ---
 
-## Phase 4: Beta Launch & Iteration
-**Duration:** Weeks 17-20 (4 weeks)
-**Goal:** 50+ beta users, 100+ discussions, ready for public launch
+## Phase 4: Beta Launch (Weeks 17-20)
 
-### Sprint 9 (Week 17): Beta Preparation
+### Sprint 8 (Week 17): Beta Prep
 
-#### Tasks
-- [ ] Set up production environment:
-  - Kubernetes cluster or AWS ECS
-  - Auto-scaling (2-10 pods/instances)
-  - Load balancer (ALB or GCP LB)
-- [ ] Configure backup and disaster recovery:
-  - Daily database backups (retain 30 days)
-  - S3 artifact backups
-  - Recovery playbook
-- [ ] Implement usage quotas:
-  - Free tier: 5 discussions/month
-  - Pro tier: 50 discussions/month
-  - Enterprise tier: Unlimited
-- [ ] Create admin dashboard:
-  - User management
-  - Usage monitoring
-  - Cost tracking
-  - Feature flags
-- [ ] Write user documentation:
-  - User guide (getting started, advanced features)
-  - FAQ (10-15 common questions)
-  - Troubleshooting guide
-  - Video walkthrough (5-10 min)
-- [ ] Create onboarding flow:
-  - Welcome email sequence (3 emails)
-  - In-app tutorial (interactive)
-  - Sample discussions to explore (3-5 preloaded)
-- [ ] Set up beta program:
-  - Recruit 50-100 beta users (target: 30% researchers, 30% investors, 40% general)
-  - Create feedback collection system (in-app survey, email)
-  - Schedule user interviews (10-15 sessions)
-  - Implement feature request tracking (Productboard or Canny)
-- [ ] Implement billing system:
-  - Stripe integration
-  - Subscription tiers (Free, Pro, Enterprise)
-  - Usage tracking and limits
-  - Invoicing
+**Tasks:**
+- [ ] Production environment (Kubernetes/ECS, auto-scaling 2-10, load balancer)
+- [ ] Backup/recovery (daily DB backups 30 days, S3 artifacts, recovery playbook)
+- [ ] Usage quotas (Free: 5/month, Pro: 50/month, Enterprise: unlimited)
+- [ ] Admin dashboard (user mgmt, usage monitoring, cost tracking, feature flags)
+- [ ] User documentation (guide, FAQ, troubleshooting, video walkthrough)
+- [ ] Onboarding (welcome emails, in-app tutorial, sample discussions)
+- [ ] Beta program (recruit 50-100 users, feedback system, user interviews, feature requests)
+- [ ] Billing (Stripe, subscription tiers, usage tracking, invoicing)
 
-#### Deliverables
-- Production environment deployed
-- Admin dashboard operational
-- User documentation complete
-- Onboarding flow live
-- Beta program infrastructure ready
-- Billing system functional
+**Deliverables:** Prod deployed, admin dashboard, docs, onboarding, beta infrastructure, billing
 
-#### Acceptance Criteria
-- Production environment stable (>99% uptime)
-- 50 beta users invited and onboarded
-- All documentation accessible
-- Billing system processes test payments
+**Acceptance:**
+- Prod stable (>99% uptime)
+- 50 beta users invited
+- Docs accessible
+- Billing processes test payments
 
-#### Team
-- DevOps Engineer (lead - production setup)
-- Backend Engineer #2 (admin dashboard, billing)
-- Frontend Engineer (onboarding UI)
-- Designer (documentation design)
-- PM (beta recruitment, user interviews)
-- Technical Writer (documentation)
+**Team:** DevOps (prod), Backend #2 (admin/billing), Frontend (onboarding), Designer, PM (beta), Tech Writer
 
-### Sprint 10 (Weeks 18-19): Beta Testing & Iteration
+---
 
-#### Tasks
-- [ ] Monitor beta user activity:
-  - Track daily/weekly active users
-  - Monitor discussion completion rate
-  - Identify drop-off points
-  - Analyze tool usage patterns
-- [ ] Conduct user interviews (10-15 sessions):
-  - Understand user workflows
-  - Identify pain points
-  - Collect feature requests
-  - Gauge satisfaction
-- [ ] Collect feedback surveys:
-  - Post-discussion satisfaction survey
-  - Weekly feedback email
-  - NPS survey
-- [ ] Analyze usage data:
-  - Most common topics
-  - Average discussion length
-  - Consensus achievement rate
-  - Tool usage patterns
-  - Cost per discussion
-- [ ] Prioritize issues and feedback:
-  - P0 (critical bugs): Fix immediately
-  - P1 (major issues): Fix in Sprint 10
-  - P2 (minor issues): Fix if time allows
-  - Feature requests: Prioritize top 3
-- [ ] Implement fixes and improvements:
-  - Bug fixes (P0, P1)
-  - UI/UX refinements (based on feedback)
-  - Performance optimizations (based on real usage)
-  - Quick feature additions (if high value, low effort)
-- [ ] Iterate on prompts:
-  - A/B test prompt variations
-  - Optimize based on discussion quality
-  - Improve Socratic questioning
-- [ ] Track KPIs:
-  - User preference: >80% prefer multi-agent
-  - Consensus rate: >70% reach >80%
-  - Factual accuracy: >90%
-  - NPS: >40
-  - Discussion time: <10 min (p95)
+### Sprint 9 (Weeks 18-19): Beta Testing + Iteration
 
-#### Deliverables
-- 100+ discussions completed in beta
-- User interview insights documented
-- All P0/P1 bugs fixed
-- UI/UX refinements deployed
-- KPI dashboard with real data
+**Tasks:**
+- [ ] Monitor activity (DAU/WAU, completion rate, drop-off, tool usage)
+- [ ] User interviews (10-15 sessions)
+- [ ] Feedback surveys (post-discussion, weekly, NPS)
+- [ ] Analyze usage (topics, discussion length, consensus rate, tool patterns, cost/discussion)
+- [ ] Prioritize issues (P0: fix immediately, P1: fix in sprint, P2: if time, features: top 3)
+- [ ] Implement fixes (bugs, UI/UX refinements, performance, quick features)
+- [ ] Iterate on prompts (A/B test, optimize, improve Socratic)
+- [ ] Track KPIs (user preference >80%, consensus >70%, accuracy >90%, NPS >40, time <10min)
 
-#### Acceptance Criteria
-- 50+ beta users active
+**Deliverables:** 100+ discussions, interview insights, all P0/P1 fixed, UI refinements, KPI dashboard
+
+**Acceptance:**
+- 50+ users active
 - 100+ discussions completed
 - All critical bugs resolved
-- User satisfaction metrics meet targets
+- Metrics meet targets
 - NPS >40
 
-#### Team
-- All engineers (bug fixes, improvements)
-- PM (user interviews, feedback analysis)
-- Designer (UI refinements)
+**Team:** All engineers, PM, Designer
 
-### Sprint 11 (Week 20): Launch Preparation
+---
 
-#### Tasks
+### Sprint 10 (Week 20): Launch Prep
+
+**Tasks:**
 - [ ] Final bug fixes (P2)
-- [ ] UI/UX final polish:
-  - Animation smoothness
-  - Loading state consistency
-  - Error message clarity
-  - Mobile responsiveness check
-- [ ] Performance final tuning:
-  - Identify and fix any remaining bottlenecks
-  - Optimize slow database queries
-  - Reduce LLM API latency where possible
-- [ ] Security final audit:
-  - Re-run penetration test
-  - Address any new findings
-  - Update dependency versions
-  - Review access controls
-- [ ] Documentation updates:
-  - Update user guide with beta learnings
-  - Add FAQ entries from beta feedback
-  - Create API documentation (if exposing API)
-- [ ] Create launch materials:
-  - Landing page optimization (A/B tested copy)
-  - Launch blog post (1000-1500 words)
-  - Demo videos (product tour, use cases)
-  - Press kit (screenshots, descriptions, quotes)
-  - Social media posts (Twitter, LinkedIn)
-- [ ] Pricing finalization:
-  - Free tier: 5 discussions/month
-  - Pro tier: $29/month (50 discussions)
-  - Enterprise tier: Custom pricing
-- [ ] Marketing preparation:
-  - Product Hunt launch scheduled
-  - Email announcement list (1000+ subscribers target)
-  - Outreach to relevant communities (Reddit, HN, Discord)
-  - Influencer outreach (AI Twitter, YouTube)
-- [ ] Final testing:
-  - Regression testing (all critical paths)
-  - Load testing (1000 concurrent users)
-  - Chaos engineering (failure injection)
-- [ ] Launch checklist:
-  - [ ] All tests passing
-  - [ ] Documentation complete
-  - [ ] Monitoring alerts verified
-  - [ ] Backup/recovery tested
-  - [ ] Support email set up
-  - [ ] Pricing page live
-  - [ ] Terms of service and privacy policy published
-  - [ ] Launch blog post ready
-  - [ ] Product Hunt scheduled
+- [ ] UI/UX polish (animations, loading consistency, error clarity, mobile check)
+- [ ] Performance tuning (bottlenecks, slow queries, LLM latency optimization)
+- [ ] Security audit (re-run pen test, address findings, update dependencies, review access)
+- [ ] Documentation updates (user guide, FAQ, API docs)
+- [ ] Launch materials (landing page, blog post, demo videos, press kit, social posts)
+- [ ] Pricing finalization (Free: 5/month, Pro: $29/month 50 discussions, Enterprise: custom)
+- [ ] Marketing (Product Hunt, email list 1000+, community outreach, influencer outreach)
+- [ ] Final testing (regression, load 1000 concurrent, chaos engineering)
+- [ ] Launch checklist (tests ✓, docs ✓, monitoring ✓, backup ✓, support email ✓, pricing ✓, ToS/privacy ✓, blog ✓, Product Hunt ✓)
 
-#### Deliverables
-- All bugs fixed
-- Final polished UI
-- Security audit passed
-- Launch materials complete
-- Pricing live
-- Marketing campaign ready
-- Production ready for public launch
+**Deliverables:** All bugs fixed, polished UI, security audit passed, launch materials, pricing live, marketing ready, launch checklist 100%
 
-#### Acceptance Criteria
-- All critical paths tested and working
-- No P0/P1 bugs in backlog
+**Acceptance:**
+- All critical paths tested
+- No P0/P1 bugs
 - Security audit passed
 - Performance meets targets
-- Launch checklist 100% complete
+- Launch checklist 100%
 
-#### Team
-- All team members (final push)
+**Team:** All
 
-### Phase 4 Success Criteria
-- ✅ 50+ beta users onboarded
-- ✅ 100+ discussions completed in beta
-- ✅ All critical issues resolved
-- ✅ NPS score >40
-- ✅ >70% user preference for multi-agent
-- ✅ Documentation complete
-- ✅ Ready for public launch (launch checklist complete)
+**Phase 4 Success Criteria:**
+- ✅ 50+ beta users
+- ✅ 100+ discussions
+- ✅ NPS >40
+- ✅ >80% user preference
+- ✅ <5% critical bug rate
+- ✅ Launch ready
 
 ---
 
 ## Resource Allocation
 
-### Team Breakdown
-
 | Role | Allocation | Responsibilities |
 |------|------------|------------------|
-| **Backend Lead** | Full-time (20 weeks) | Architecture, agent runtime, orchestration, Parlant |
-| **Backend Engineer #1** | Full-time (20 weeks) | Agents, Socratic framework, judge panel |
-| **Backend Engineer #2** | Full-time (20 weeks) | Tools, CARE aggregation, security |
-| **Frontend Engineer** | Full-time (Weeks 7-20) | UI/UX, real-time updates, templates |
-| **DevOps Engineer** | Part-time (40% - Weeks 1-2, 13-20) | Infrastructure, CI/CD, monitoring |
-| **Product Manager** | Full-time (20 weeks) | Roadmap, user research, coordination |
-| **UX Designer** | Part-time (30% - Weeks 1, 7-8, 15-20) | UI design, user flows, polishing |
+| Backend Lead | Full-time (20w) | Architecture, agents, orchestration, Parlant |
+| Backend #1 | Full-time (20w) | Agents, Socratic, judge panel |
+| Backend #2 | Full-time (20w) | Tools, CARE, security |
+| Frontend | Full-time (W7-20) | UI/UX, real-time, templates |
+| DevOps | Part-time 40% (W1-2, 13-20) | Infrastructure, CI/CD, monitoring |
+| PM | Full-time (20w) | Roadmap, user research, coordination |
+| Designer | Part-time 30% (W1, 7-8, 15-20) | UI design, user flows, polish |
 
-**Optional:**
-- ML Engineer (Weeks 9-10): Vector DB optimization, CARE algorithm
-- Technical Writer (Weeks 17-20): Documentation
+---
 
-### Budget Breakdown
+## Budget
 
-**Personnel (20 weeks):**
-- Backend Engineers (3): $150k-180k
-- Frontend Engineer: $50k-60k
-- DevOps Engineer (part-time): $20k-25k
-- PM: $50k-60k
-- Designer (part-time): $15k-20k
-- **Total Personnel:** ~$285k-345k
-
-**Infrastructure (by phase):**
-- Phase 0-1 (Dev): $2k-4k/month × 2 months = $4k-8k
-- Phase 2-3 (Staging): $7.5k-14.5k/month × 2 months = $15k-29k
-- Phase 4 (Beta): $15k-25k/month × 1 month = $15k-25k
-- **Total Infrastructure:** ~$34k-62k
-
-**External Services:**
-- LLM APIs (testing + beta): $20k-30k
-- Domain, SSL, email, tools: $3k-5k
-- **Total External:** ~$23k-35k
-
-**Grand Total:** $342k-442k
-
-**Constrained Budget:** If budget is $50k development:
-- Reduce team to 4 engineers + PM (no separate DevOps, Designer)
-- Engineers wear multiple hats
-- Extend timeline to 24-26 weeks
-- Prioritize ruthlessly (MVP first, polish later)
+| Category | Amount | Notes |
+|----------|--------|-------|
+| **Personnel (20w)** | $285k-345k | 3 backend, 1 frontend, PM, DevOps (pt), Designer (pt) |
+| **Infrastructure** | $34k-62k | Dev $4-8k, Staging $15-29k, Beta $15-25k |
+| **External Services** | $23k-35k | LLM APIs $20-30k, Domain/SSL/email/tools $3-5k |
+| **Total** | **$342k-442k** | Full budget |
+| **Constrained** | **$50k** | 4 engineers + PM, extend to 24-26w, ruthless prioritization |
 
 ---
 
 ## Dependencies & Critical Path
 
-### External Dependencies
-- [ ] LLM API access approved (OpenAI, Anthropic, Perplexity) - **Week 2**
-- [ ] Tool API keys secured (Alpha Vantage, Wolfram) - **Week 2**
-- [ ] Code sandbox provider selected (E2B or Modal) - **Week 2**
-- [ ] Cloud provider account (AWS/GCP) - **Week 1**
+### External Dependencies (Due Dates)
+- [ ] LLM API access (OpenAI, Claude, Perplexity) - **Week 2**
+- [ ] Tool API keys (Alpha Vantage, Wolfram) - **Week 2**
+- [ ] Code sandbox (E2B/Modal) - **Week 2**
+- [ ] Cloud provider account - **Week 1**
 - [ ] Domain registration - **Week 1**
 
-### Internal Dependencies (Critical Path)
-
+### Critical Path
 ```
-Week 1-2: Infrastructure Setup
-    ↓
+Week 1-2: Infrastructure
+    ↓ (BLOCKS ALL)
 Week 3-4: Agent Runtime
-    ↓ (blocks all agent features)
+    ↓ (BLOCKS AGENTS)
 Week 5-6: Tool Integration
-    ↓ (blocks full discussions)
+    ↓ (BLOCKS DISCUSSIONS)
 Week 7-8: Orchestration + UI
     ↓ (MILESTONE: MVP)
 Week 9-10: Socratic Framework
-    ↓ (blocks judge panel)
+    ↓ (BLOCKS JUDGES)
 Week 11-12: Judge Panel + Parlant
-    ↓ (MILESTONE: Core Features Complete)
+    ↓ (MILESTONE: Core Complete)
 Week 13-14: Extended LLM + Tools
-    ↓ (parallel with UI)
-Week 15-16: Advanced UI + Performance + Security
-    ↓ (MILESTONE: Production Ready)
+    ↓ (PARALLEL WITH UI)
+Week 15-16: Advanced UI + Perf + Security
+    ↓ (MILESTONE: Prod Ready)
 Week 17: Beta Prep
     ↓
 Week 18-19: Beta Testing
@@ -818,216 +517,44 @@ Week 20: Launch Prep
     ↓ (MILESTONE: Public Launch)
 ```
 
-**Critical Path Items:**
-1. Agent Runtime (Week 3-4) - Everything depends on this
-2. Tool Integration (Week 5-6) - Required for MVP
-3. Orchestration (Week 7-8) - Required for end-to-end flow
-4. Judge Panel (Week 11-12) - Core differentiator
-5. Security Audit (Week 16) - Launch blocker
-
 ---
 
 ## Risk Management
 
-### High Severity Risks
-
-| Risk | Impact | Probability | Mitigation | Contingency |
-|------|--------|-------------|------------|-------------|
-| **LLM API Rate Limits** | Cannot serve users | High | Queue requests, use multiple API keys, provider diversity | Add more providers, increase rate limits with providers |
-| **High Latency (>10 min)** | Poor user experience | Medium | Parallel execution, streaming, "quick mode" | Set expectations, add progress indicators, async processing |
-| **LLM API Costs Exceed Budget** | Unsustainable | High | Token budgets, cheaper models for non-critical roles, caching, user quotas | Reduce agent count, shorter discussions, increase pricing |
-| **Security Breach** | Data leak, reputation damage | Low | Security audit, input sanitization, secrets management, monitoring | Incident response plan, insurance, public disclosure |
-| **Team Member Leaves** | Delayed timeline | Medium | Documentation, code reviews, knowledge sharing | Cross-train team, extend timeline, hire replacement |
-
-### Medium Severity Risks
-
-| Risk | Impact | Probability | Mitigation | Contingency |
-|------|--------|-------------|------------|-------------|
-| **LLM Hallucinations** | Incorrect consensus | Medium | Judge panel filtering, fact-checking, confidence scores | Disclaimer, user challenges, downrank low-confidence |
-| **Tool API Failures** | Degraded discussions | Medium | Fallback tools, retry logic, graceful degradation | Discussions complete without tool data, manual data entry |
-| **Low User Adoption** | Product failure | Medium | Beta testing, user research, iteration, marketing | Pivot features, adjust pricing, target different users |
-| **Database Bottlenecks** | Slow performance | Low | Connection pooling, read replicas, caching, indexes | Upgrade database tier, optimize queries |
-| **Scope Creep** | Missed deadline | Medium | Strict prioritization, phase gates, PM discipline | Cut features, extend timeline, reduce quality |
-
----
-
-## Testing Strategy
-
-### Unit Tests
-- **Coverage:** >80%
-- **Scope:** All agent logic, tools, orchestration, utilities
-- **Framework:** pytest (Python), Jest (TypeScript)
-- **Run:** On every commit (CI)
-
-### Integration Tests
-- **Coverage:** >70%
-- **Scope:** Agent + LLM interactions, tool calling, database operations, API endpoints
-- **Framework:** pytest with real API calls (limited), Supertest (API)
-- **Run:** On every PR (CI)
-
-### End-to-End Tests
-- **Coverage:** 10 critical user flows
-- **Scope:** Full discussion workflows, user journeys
-- **Framework:** Playwright (frontend E2E)
-- **Examples:**
-  1. User starts discussion → agents debate → consensus → results
-  2. User configures advanced settings → custom discussion → export
-  3. User views discussion history → opens previous discussion
-  4. User tries to exceed quota → blocked with upgrade prompt
-  5. Agent calls tool → tool fails → graceful degradation
-- **Run:** Nightly (scheduled CI), pre-release
-
-### Performance Tests
-- **Load Testing:** Simulate 100 concurrent discussions
-- **Stress Testing:** Find breaking point
-- **Latency Testing:** Measure p50, p95, p99
-- **Tools:** Locust or k6
-- **Run:** Weeks 15, 18, 20
-
-### Security Tests
-- **Input Validation:** Test SQL injection, XSS, prompt injection
-- **Authentication:** Test JWT token expiry, refresh logic
-- **Authorization:** Test role-based access control
-- **Penetration Testing:** External audit (Week 16, 20)
-- **Run:** Weeks 15-16 (comprehensive), ongoing (automated scans)
+| Risk | Impact | Prob | Mitigation | Contingency |
+|------|--------|------|------------|-------------|
+| **LLM API rate limits** | High | High | Queue requests, multiple keys, provider diversity | Add providers, increase limits |
+| **High latency (>10min)** | High | Med | Parallel execution, streaming, quick mode | Set expectations, async processing |
+| **Cost exceeds budget** | High | High | Token budgets, cheaper models, caching, quotas | Reduce agents, shorter discussions, increase pricing |
+| **Security breach** | Critical | Low | Audit, sanitization, secrets mgmt, monitoring | Incident response, insurance, disclosure |
+| **Team member leaves** | Med | Med | Documentation, code reviews, knowledge sharing | Cross-train, extend timeline, hire |
+| **LLM hallucinations** | Med | Med | Judge filtering, fact-checking, confidence scores | Disclaimer, user challenges, downrank |
+| **Tool API failures** | Med | Med | Fallbacks, retry, graceful degradation | Continue without tool data |
+| **Low adoption** | Med | Med | Beta testing, user research, iteration, marketing | Pivot features, adjust pricing, retarget |
 
 ---
 
 ## Milestones & Decision Points
 
-### Milestone 1: Foundation Complete (Week 2)
-**Criteria:**
-- ✅ CI/CD pipeline operational
-- ✅ All API keys secured and tested
-- ✅ Database schema deployed
-
-**Decision Point:** Proceed to Phase 1?
-- **Go:** If all API access granted
-- **No-Go:** If critical APIs unavailable (block: negotiate access, find alternatives)
-
-### Milestone 2: MVP Complete (Week 8)
-**Criteria:**
-- ✅ End-to-end discussion with 3+ agents
-- ✅ Tools functional (2+)
-- ✅ Basic UI working
-- ✅ Discussion <5 min
-
-**Decision Point:** Is MVP valuable?
-- **Go:** User testing shows promise (>70% preference)
-- **No-Go:** If MVP not valuable (action: reassess architecture, simplify further)
-
-### Milestone 3: Core Features Complete (Week 12)
-**Criteria:**
-- ✅ Socratic questioning evident
-- ✅ Judge panel operational
-- ✅ CARE aggregation >10% better
-- ✅ Consensus rate >70%
-
-**Decision Point:** Are core features differentiating?
-- **Go:** Judge panel demonstrably better than baseline
-- **No-Go:** If no improvement (action: refine prompts, adjust CARE algorithm, extend phase)
-
-### Milestone 4: Production Ready (Week 16)
-**Criteria:**
-- ✅ 7+ LLM providers
-- ✅ Advanced UI complete
-- ✅ Performance <60s first round
-- ✅ Security audit passed
-
-**Decision Point:** Ready for beta users?
-- **Go:** All criteria met, <5% critical bug rate
-- **No-Go:** If security or performance fails (action: extend phase, delay beta)
-
-### Milestone 5: Launch Ready (Week 20)
-**Criteria:**
-- ✅ 50+ beta users, 100+ discussions
-- ✅ NPS >40
-- ✅ All P0/P1 bugs fixed
-- ✅ Documentation complete
-
-**Decision Point:** Launch publicly?
-- **Go:** User metrics meet targets, stable infrastructure
-- **No-Go:** If NPS <40 or instability (action: extend beta, address feedback)
+| Milestone | Week | Criteria | Go/No-Go Decision |
+|-----------|------|----------|-------------------|
+| **Foundation Complete** | 2 | CI/CD + API keys + DB | Go if API access granted |
+| **MVP Complete** | 8 | End-to-end discussion, <5 min | Go if >70% user preference |
+| **Core Features Complete** | 12 | Socratic + judges, consensus >70%, CARE >10% | Go if judge panel demonstrably better |
+| **Production Ready** | 16 | 7+ LLMs, <60s, security audit passed | Go if <5% critical bugs |
+| **Launch Ready** | 20 | 50+ users, 100+ discussions, NPS >40 | Go if stable + metrics met |
 
 ---
 
-## Post-Launch Roadmap (Out of Scope for Initial 20 Weeks)
+## Success Metrics by Phase
 
-### Phase 5: Advanced Intelligence (Weeks 21-28)
-- Meta-learning: System learns optimal configurations
-- User participation: Inject arguments mid-discussion
-- Discussion branching: "What-if" scenarios
-- Multi-user discussions: Team debates
-
-### Phase 6: Specialization (Weeks 29-36)
-- Domain-specific agents (finance, science, tech)
-- Custom agent training (fine-tuned models)
-- Industry-specific templates
-- Enterprise integrations (Slack, Teams)
-- Developer API
-
-### Phase 7: Ecosystem (Weeks 37+)
-- Plugin marketplace
-- Community-contributed tools
-- Custom LLM provider support
-- White-label solutions
-- Mobile apps (iOS, Android)
+| Phase | Success Criteria |
+|-------|------------------|
+| **Phase 1 (W8)** | 1 end-to-end discussion, <5 min, 2+ tools, basic UI |
+| **Phase 2 (W12)** | Consensus >70%, Socratic evident, CARE >10% better |
+| **Phase 3 (W16)** | 7+ providers, <60s first round, security audit passed |
+| **Phase 4 (W20)** | 50+ users, 100+ discussions, NPS >40, >80% preference, <5% bugs |
 
 ---
 
-## Communication Plan
-
-### Daily
-- **Standup:** 9:30 AM, 15 min
-  - What I did yesterday
-  - What I'm doing today
-  - Blockers
-- **Slack:** #socratic-dev (development), #socratic-alerts (monitoring)
-
-### Weekly
-- **Sprint Planning:** Monday, 9:00 AM, 2 hours
-- **Sprint Review:** Friday, 3:00 PM, 1 hour (demo)
-- **Retrospective:** Friday, 4:00 PM, 30 min
-- **Status Update Email:** Friday to stakeholders
-
-### Bi-Weekly
-- **All-Hands Demo:** Friday, every 2 weeks
-- **Stakeholder Update:** Slides + demo
-
-### Monthly
-- **Roadmap Review:** First Monday of month
-- **Metrics Review:** KPIs, costs, progress
-
----
-
-## Success Metrics (Overall)
-
-### By Phase 1 (Week 8)
-- ✅ 1 end-to-end discussion
-- ✅ Discussion <5 min
-- ✅ 2+ tools working
-- ✅ Basic UI functional
-
-### By Phase 2 (Week 12)
-- ✅ Consensus >70% of discussions
-- ✅ Socratic questioning evident
-- ✅ CARE >10% better than baseline
-
-### By Phase 3 (Week 16)
-- ✅ 7+ providers
-- ✅ Performance <60s first round
-- ✅ Security audit passed
-
-### By Phase 4 (Week 20)
-- ✅ 50+ beta users
-- ✅ 100+ discussions
-- ✅ NPS >40
-- ✅ >80% prefer multi-agent
-- ✅ <5% critical bug rate
-
----
-
-**Use with SpecKit:**
-```bash
-/plan docs/inputs/WORKPLAN.md
-```
+**Version:** 1.0 | **Updated:** 2025-11-12
