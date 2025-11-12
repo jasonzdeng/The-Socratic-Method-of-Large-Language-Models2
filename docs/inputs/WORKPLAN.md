@@ -1,7 +1,7 @@
 # Implementation Workplan
 **Use:** `/plan docs/inputs/WORKPLAN.md`
 
-**Timeline:** 20 weeks | **Team:** 7 | **Budget:** $50k + $15k/mo
+**Timeline:** 20 weeks | **Team:** 7 | **Budget (constrained):** $50k build (local-only MVP)
 
 ---
 
@@ -9,11 +9,11 @@
 
 | Phase | Weeks | Milestone |
 |-------|-------|-----------|
-| **0: Foundation** | 1-2 | CI/CD + DB + APIs |
-| **1: MVP** | 3-8 | End-to-end <5 min |
-| **2: Socratic + Judges** | 9-12 | Consensus >70%, CARE >10% |
-| **3: Advanced** | 13-16 | <60s first round, audit passed |
-| **4: Beta** | 17-20 | NPS >40, launch ready |
+| Phase 0: Foundation | 1-2 | CI/CD + DB + APIs |
+| Phase 1: MVP | 3-8 | End-to-end <5 min |
+| Phase 2: Socratic + Judges | 9-12 | Consensus >70%, CARE >10% |
+| Phase 3: Advanced | 13-16 | <60s first round, security audit passed |
+| Phase 4: Beta | 17-20 | NPS >40, launch ready |
 
 ---
 
@@ -22,8 +22,7 @@
 **W1: Infrastructure**
 - [ ] Git + CI/CD (GitHub Actions)
 - [ ] Docker dev environment
-- [ ] Staging/prod (AWS/GCP)
-- [ ] Monitoring (Datadog/Prometheus)
+- [ ] Local monitoring (structured logs)
 - [ ] Monorepo (backend, frontend, shared)
 
 **W2: APIs + Database**
@@ -32,9 +31,9 @@
 - [ ] Code sandbox (E2B/Modal)
 - [ ] PostgreSQL 15+ + Redis 7.2+
 - [ ] Schema v1.0 + migrations
-- [ ] Secrets (AWS Secrets Manager)
+- [ ] Secrets via `.env` (local)
 
-**Success:** ✅ CI/CD operational, APIs tested, DB deployed
+**Success:** CI/CD operational; APIs tested; DB deployed
 
 **Team:** DevOps + Backend Lead
 
@@ -52,7 +51,7 @@
 - [ ] Unit >80%, integration tests
 
 **Deliverable:** `agents/{base,pool,prompts}.py`
-**Accept:** 5 agents, diverse providers, <2K tokens, injection blocked
+**Accept:** 5 agents (≥3 providers), <2K tokens per contribution, prompt injection blocked
 **Team:** Backend #1 + #2
 
 ### Sprint 2 (W5-6): Tools
@@ -64,7 +63,7 @@
 - [ ] Retry 2×, unit + integration tests
 
 **Deliverable:** `tools/{base,perplexity,alpha_vantage,code_sandbox,wolfram,registry}.py`
-**Accept:** Agent calls tools, receives results, handles failures
+**Accept:** Agents call tools, receive results, handle failure (retry + fallback)
 **Team:** Backend #2 + #1
 
 ### Sprint 3 (W7-8): Orchestration + UI
@@ -87,10 +86,10 @@
 - [ ] JWT auth, rate limit (100 req/min)
 
 **Deliverable:** `orchestration/`, `models/`, `api/`, `frontend/`
-**Accept:** User → discussion (5 agents, 5 rounds) → consensus → results, <5 min
+**Accept:** User question → 5 agents × 5 rounds → consensus attempt → results in <5 min
 **Team:** All engineers, Frontend (UI lead), Designer
 
-**Success:** ✅ End-to-end discussion, 2+ tools, basic UI, >80% unit, >70% integration
+**Success:** End-to-end run; ≥2 tools; basic UI streaming; unit >80%, integration >70%
 
 ---
 
@@ -106,7 +105,7 @@
 - [ ] Manual eval (10 discussions)
 
 **Deliverable:** `agents/{socratic_prompts,socratic_engine,position_tracker}.py`, `knowledge_graph/`
-**Accept:** Agents pose questions (>1), identify assumptions, update positions, mitigation prevents premature consensus
+**Accept:** Agents (each) pose ≥1 question, identify assumptions, update positions with confidence; premature consensus mitigated
 **Team:** Backend #1 + #2
 
 ### Sprint 5 (W11-12): Judges + Parlant
@@ -125,10 +124,10 @@
 - [ ] Manual quality eval
 
 **Deliverable:** `judges/{base,panel,care_aggregation,schemas}.py`, `parlant/`, UI updates
-**Accept:** Judge panel evaluates, CARE >10% better, consensus >70%, quality >20% improved
+**Accept:** Judge panel outputs structured JSON; CARE >10% over majority; consensus >70%; quality +≥20%
 **Team:** Backend #2 (judges), Backend #1 (CARE + Parlant), Frontend
 
-**Success:** ✅ Socratic evident, judges operational, CARE >10%, consensus >70%, Parlant integrated, quality >30% vs Phase 1
+**Success:** Socratic implemented; judges operational; CARE >10%; consensus >70%; Parlant integrated; quality +≥30% vs Phase 1
 
 ---
 
@@ -144,7 +143,7 @@
 - [ ] Cross-provider tests, cost tracking
 
 **Deliverable:** 7+ providers, 6+ tools, visualizations
-**Accept:** All providers interchangeable, fallbacks work, visualizations embedded
+**Accept:** Providers interchangeable; fallbacks work; visualizations embedded
 **Team:** Backend #1 + #2
 
 ### Sprint 7 (W15-16): Advanced UI + Perf + Security
@@ -158,7 +157,7 @@
 **Performance:**
 - [ ] Parallel execution (asyncio), aggressive cache (Redis)
 - [ ] DB optimize (indexes, pooling), LLM batching
-- [ ] CDN, lazy load, code split
+- [ ] Lazy load, code split
 - [ ] Load test (100 concurrent), profiling, optimize
 
 **Security:**
@@ -173,32 +172,29 @@
 - [ ] User analytics (PostHog/Mixpanel)
 
 **Deliverable:** Advanced UI, <60s first round, security passed, monitoring operational
-**Accept:** <60s first round, <10 min total, Lighthouse >90, audit passed, 100 concurrent
+**Accept:** First round <60s; total <10 min; Lighthouse >90; security audit passed; stable at 100 concurrent
 **Team:** Frontend, Backend #1 (perf), Backend #2 (security), DevOps, Designer
 
-**Success:** ✅ 7+ providers, advanced UI, templates, <60s first round, security audit passed, monitoring operational
+**Success:** 7+ providers; advanced UI + templates; perf meets targets; monitoring active
 
 ---
 
 ## Phase 4 (W17-20)
 
-### Sprint 8 (W17): Beta Prep
+### Sprint 8 (W17): Internal Beta Prep (Local)
 
 **Tasks:**
-- [ ] Prod (K8s/ECS, auto-scale, load balancer)
-- [ ] Backup (daily DB 30d, S3, playbook)
-- [ ] Quotas (Free 5/mo, Pro 50/mo, Enterprise unlimited)
-- [ ] Admin dashboard (users, usage, cost, flags)
-- [ ] Docs (guide, FAQ, troubleshooting, video)
-- [ ] Onboarding (emails, tutorial, samples)
-- [ ] Beta program (recruit 50-100, feedback, interviews)
-- [ ] Billing (Stripe, tiers, tracking)
+- [ ] Package local app (scripts, Docker Compose)
+- [ ] Local DB backup (daily, 30d retention) + recovery playbook
+- [ ] Docs (guide, FAQ, troubleshooting, short video)
+- [ ] Onboarding (tutorial, samples)
+- [ ] Internal beta (recruit 20-50, feedback sessions)
 
-**Deliverable:** Prod deployed, admin, docs, onboarding, beta infra, billing
-**Accept:** Prod stable (>99%), 50 users invited, docs accessible, billing works
-**Team:** DevOps, Backend #2, Frontend, Designer, PM, Tech Writer
+**Deliverable:** Local build packaged; docs + onboarding ready; internal beta cohort recruited
+**Accept:** ≥20 internal users invited; docs accessible; backups verified
+**Team:** Backend #2, Frontend, Designer, PM, Tech Writer
 
-### Sprint 9 (W18-19): Beta Test + Iterate
+### Sprint 9 (W18-19): Beta Test + Iterate (Local)
 
 **Tasks:**
 - [ ] Monitor (DAU/WAU, completion, drop-off, tools)
@@ -210,26 +206,24 @@
 - [ ] Track KPIs (preference >80%, consensus >70%, accuracy >90%, NPS >40)
 
 **Deliverable:** 100+ discussions, insights, P0/P1 fixed, UI refined, KPI dashboard
-**Accept:** 50+ users active, 100+ discussions, critical bugs resolved, NPS >40
+**Accept:** ≥20 active users; ≥100 discussions; P0/P1 resolved; NPS >40
 **Team:** All
 
-### Sprint 10 (W20): Launch Prep
+### Sprint 10 (W20): Local Release Prep
 
 **Tasks:**
 - [ ] Final bug fixes (P2), UI polish
 - [ ] Performance tune, security re-audit
 - [ ] Docs update
-- [ ] Launch materials (landing, blog, videos, press kit, social)
-- [ ] Pricing (Free 5, Pro $29/50, Enterprise custom)
-- [ ] Marketing (Product Hunt, email 1000+, communities)
-- [ ] Final testing (regression, load 1000, chaos)
-- [ ] Launch checklist
+- [ ] Release notes + changelog
+- [ ] Final testing (regression, load 100, chaos)
+- [ ] Release checklist
 
-**Deliverable:** All bugs fixed, audit passed, materials ready, checklist 100%
-**Accept:** No P0/P1, audit passed, performance met, checklist 100%
+**Deliverable:** All bugs fixed, audit passed, checklist 100%
+**Accept:** Zero P0/P1; audit passed; perf targets met; checklist 100%
 **Team:** All
 
-**Success:** ✅ 50+ users, 100+ discussions, NPS >40, >80% preference, <5% bugs, launch ready
+**Success:** ≥20 users; ≥100 discussions; NPS >40; user preference >80%; <5% critical bugs; local release ready
 
 ---
 
@@ -245,26 +239,20 @@
 | PM | 20w | Roadmap, user research |
 | Designer | 30% (W1,7-8,15-20) | UI design |
 
-## Budget
+## Budget (Reference)
 
-| Category | Amount |
-|----------|--------|
-| Personnel | $285k-345k |
-| Infrastructure | $34k-62k |
-| External | $23k-35k |
-| **Total** | **$342k-442k** |
-| **Constrained** | **$50k** (4 eng + PM, 24-26w) |
+Constrained implementation budget: **$50k** (core engineering + PM). Extended estimates (personnel, infra, external) deferred until post-MVP.
 
 ## Critical Path
 
 ```
 W1-2: Infrastructure → W3-4: Agents → W5-6: Tools → W7-8: Orchestration
-↓ MVP
+↓ Local MVP
 W9-10: Socratic → W11-12: Judges
 ↓ Core Complete
 W13-14: LLMs → W15-16: UI/Perf/Security
-↓ Prod Ready
-W17: Prep → W18-19: Beta → W20: Launch
+↓ Local Release
+W17: Prep → W18-19: Beta → W20: Release
 ```
 
 ## Risks
@@ -279,22 +267,22 @@ W17: Prep → W18-19: Beta → W20: Launch
 
 ## Milestones
 
-| Week | Criteria | Go/No-Go |
+| Week | Criteria | Decision |
 |------|----------|----------|
-| 2 | CI/CD + APIs + DB | Go if API access granted |
-| 8 | End-to-end <5 min | Go if >70% preference |
-| 12 | Socratic + judges, consensus >70% | Go if demonstrably better |
-| 16 | 7+ LLMs, <60s, audit | Go if <5% critical bugs |
-| 20 | 50+ users, NPS >40 | Go if stable + metrics |
+| 2 | CI/CD + APIs + DB | Proceed if API access stable |
+| 8 | End-to-end <5 min | Proceed if >70% preference |
+| 12 | Socratic + judges; consensus >70% | Proceed if CARE >10% gain |
+| 16 | 7+ LLMs; <60s first round; audit | Proceed if <5% critical bugs |
+| 20 | 50+ users; NPS >40 | Launch if stability confirmed |
 
 ## Success by Phase
 
 | Phase | Criteria |
 |-------|----------|
-| P1 (W8) | 1 end-to-end, <5 min, 2+ tools, UI |
-| P2 (W12) | Consensus >70%, Socratic, CARE >10% |
-| P3 (W16) | 7+ providers, <60s, audit passed |
-| P4 (W20) | 50+ users, 100+ discussions, NPS >40, >80% preference |
+| Phase 1 (W8) | End-to-end <5 min; ≥2 tools; basic UI |
+| Phase 2 (W12) | Socratic active; consensus >70%; CARE >10% |
+| Phase 3 (W16) | 7+ providers; first round <60s; audit passed |
+| Phase 4 (W20) | ≥50 users; ≥100 discussions; NPS >40; >80% preference |
 
 ---
 
