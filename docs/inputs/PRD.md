@@ -16,10 +16,7 @@
 | Multi-perspective | 3-10 agents configurable |
 | Tool usage | >60% discussions |
 | Consensus | >70% reach >80% agreement |
-| Accuracy | >90% claims correct |
-| User preference | >80% vs single-LLM |
-| Performance | <10 min (p95) |
-| NPS | >50 |
+
 
 ## Non-Goals
 
@@ -48,7 +45,7 @@ THEN 5 agents created with 3+ providers
 AND independent context in Phase 1
 
 GIVEN agent fails initialization
-THEN retry 3×, fallback to alternative provider
+THEN retry one more time, fallback to alternative provider
 ```
 
 ### F2: Socratic Method
@@ -67,14 +64,9 @@ THEN updates position with reasoning, quantifies confidence
 
 ### F3: Tool Integration
 
-**Goal:** Perplexity Sonar Pro (200K context), Alpha Vantage (stocks), Code Sandbox (Python), Wolfram Alpha (math), MCP protocol
+**Goal:** Perplexity Sonar Pro (200K context), Alpha Vantage (stocks), Code Sandbox (Python), MCP protocol
 
-| Tool | Rate Limit |
-|------|------------|
-| Perplexity | 100/hour |
-| Alpha Vantage | 5/min |
-| Code Sandbox | 10/discussion |
-| Wolfram | 100/day |
+
 
 **Tests:**
 ```gherkin
@@ -88,7 +80,7 @@ THEN retry 2×, fallback, continue without data
 
 ### F4: Judge Panel (CARE)
 
-**Goal:** 3-5 judge LLMs, CARE aggregation (10-25% better than majority vote), 5-dimension eval (factual, logical, novel, engagement, consensus)
+**Goal:** 1-5 judge LLMs, CARE aggregation (10-25% better than majority vote), 5-dimension eval (factual, logical, novel, engagement, consensus)
 
 **Schema:**
 ```json
@@ -103,10 +95,10 @@ THEN retry 2×, fallback, continue without data
 **Tests:**
 ```gherkin
 GIVEN completed round
-THEN 3-5 judges score independently across 5 dimensions
+THEN judges score independently across 5 dimensions
 AND CARE aggregation >10% better than majority vote
 
-GIVEN consensus = 0.85
+GIVEN consensus = 0.85 (can be user defined)
 THEN mark "consensus reached", generate verdict
 ```
 
@@ -124,7 +116,7 @@ THEN mark "consensus reached", generate verdict
 **Tests:**
 ```gherkin
 GIVEN user starts discussion
-THEN workspace created, phase="Independent", budget=50K tokens, rounds=5
+THEN workspace created, phase="Independent", budget=50K tokens (can be user defined), rounds=5(can be user defined)
 
 GIVEN Round 3
 WHEN all agents complete
@@ -132,7 +124,7 @@ THEN judge evaluates, check termination
 AND if consensus ≥0.80: transition to Convergence
 
 GIVEN context >150K tokens
-THEN summarize old rounds, keep recent 2 full
+THEN summarize old rounds, keep recent 2 full, all agents have visibility to the previous rounds for them have actively engaging debates against each others.
 ```
 
 ### F6: User Interface
@@ -163,51 +155,14 @@ THEN Parlant journey defines: turn order, time limits, structure
 
 ---
 
-## Architecture
+## Architecture --- 
+only for local deployment. would be helpful to have a GUI interface
 
-```
-Frontend (Next.js, React, TypeScript)
-    ↓
-API (FastAPI, JWT, Rate Limiting)
-    ↓
-Orchestration (Manager, PhaseController, Parlant)
-    ↓
-Agents (AgentPool, JudgePanel, ToolManager)
-    ↓
-LLMs (LiteLLM: OpenAI, Claude, Perplexity, Gemini, DeepSeek, Kimi)
-    ↓
-Tools (Perplexity, Alpha Vantage, Sandbox, Wolfram)
-
-Data: PostgreSQL + Redis + Pinecone + S3
-```
-
-## Constraints
-
-**Technical:** LLM latency 3-10s, cost $0.50-$2/discussion, rate limits, context 8K-200K
-**Business:** $50k dev, $15k/mo infra, 7 people, 20 weeks
-**Legal:** LLM ToS, GDPR/CCPA, content moderation
-**User:** Expert topics, 5-15 min discussions, premium pricing
 
 ## Security
+only for local deployment. all api keys to be saved in .env and to be loaded when running
 
-- Secrets: AWS Secrets Manager
-- Input: Sanitize, prompt injection detection
-- Rate: 100 req/min/user
-- HTTPS, JWT (1h), SQL injection prevention
 
-## Privacy
-
-- GDPR, CCPA compliant
-- Retention: 90 days
-- Export/deletion available
-- Encrypt: AES-256, TLS 1.3
-
-## Release Criteria
-
-**Functional:** 5-agent discussion, 7 LLM providers, 4 tools, judge consensus >80%, UI (desktop), <10 min
-**Quality:** Unit >80%, Integration >70%, 10 E2E, no P0/P1, security audit passed
-**Performance:** API <200ms, round <90s, discussion <10 min, Lighthouse >90
-**User:** 50+ beta users, 100+ discussions, >80% preference, NPS >40
 
 ## Research (2024-2025)
 
@@ -220,16 +175,16 @@ Data: PostgreSQL + Redis + Pinecone + S3
 
 ## Dependencies
 
-**MVP:** OpenAI, Anthropic, Perplexity, Alpha Vantage, Wolfram, E2B/Modal
-**Phase 2:** Gemini, DeepSeek, Kimi, Brave Search, Yahoo Finance
+**MVP:** OpenAI, Anthropic, Perplexity, Alpha Vantage, 
+**Phase 2:** Gemini, DeepSeek, Kimi, Brave Search, Yahoo Finance, Wolfram, E2B/Modal
 
 ## Priority
 
 | Priority | Features | Phase |
 |----------|----------|-------|
-| Must | Multi-agent (3+), Tools (Perplexity, Alpha Vantage), Orchestration, Simple UI | MVP (W8) |
-| Should | Socratic, Judges + CARE, Parlant, 5+ LLMs | Phase 2 (W12) |
-| Could | Templates, Advanced UI, 7+ LLMs | Phase 3 (W16) |
+| Must | Multi-agent (3+), Tools (Perplexity, Alpha Vantage), Orchestration, Simple UI, Socratic, Judges + CARE, | MVP |
+| Should | Parlant, 5+ LLMs | Phase 2  |
+| Could | Templates, Advanced UI, 7+ LLMs | Phase 3 |
 | Won't | Mobile, Real-time collab, Custom training, Non-English | Out of scope |
 
 ---
