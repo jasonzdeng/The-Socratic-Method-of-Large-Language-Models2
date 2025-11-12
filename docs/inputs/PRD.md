@@ -9,12 +9,13 @@
 **Solution:** 7+ LLMs debate via Socratic Method, judged by ensemble panel
 **Value:** Most rigorous AI platform challenging status quo
 
+
 ## Goals
 
 | Goal | Target |
 |------|--------|
 | Multi-perspective | 3-10 agents configurable |
-| Tool usage | >60% discussions |
+| Tool usage | >60% of discussions |
 | Consensus | >70% reach >80% agreement |
 
 
@@ -36,8 +37,7 @@ Mobile apps, real-time multi-user, custom LLM training, video/audio, social feat
 
 ### F1: Multi-Agent System
 
-**Goal:** 3-10 LLM agents from 7+ providers (OpenAI, Claude, Perplexity, Gemini, DeepSeek, Kimi, Llama) with roles (Analyst, Critic, Researcher, Synthesizer)
-
+**Goal:** 3-10 LLM agents from 7+ providers (OpenAI, Claude, Perplexity, Gemini, DeepSeek, Kimi, Llama) with roles (Analyst, Critic, Researcher, Synthesizer).
 **Tests:**
 ```gherkin
 GIVEN user starts discussion
@@ -50,7 +50,7 @@ THEN retry one more time, fallback to alternative provider
 
 ### F2: Socratic Method
 
-**Goal:** IntelliChain question reformulation, CONSENSAGENT sycophancy mitigation, assumption challenging, evidence citations, position updates
+**Goal:** IntelliChain question reformulation, CONSENSAGENT sycophancy mitigation, assumption challenging, evidence citations, position updates.
 
 **Tests:**
 ```gherkin
@@ -64,7 +64,7 @@ THEN updates position with reasoning, quantifies confidence
 
 ### F3: Tool Integration
 
-**Goal:** Perplexity Sonar Pro (200K context), Alpha Vantage (stocks), Code Sandbox (Python), MCP protocol
+**Goal:** Perplexity Sonar Pro (200K context), Alpha Vantage (stocks), Code Sandbox (Python), MCP protocol.
 
 
 
@@ -80,15 +80,15 @@ THEN retry 2×, fallback, continue without data
 
 ### F4: Judge Panel (CARE)
 
-**Goal:** 1-5 judge LLMs, CARE aggregation (10-25% better than majority vote), 5-dimension eval (factual, logical, novel, engagement, consensus)
+**Goal:** 1-5 judge LLMs, CARE aggregation (10-25% better than majority vote), 5-dimension eval (factual, logical, novel, engagement, consensus).
 
 **Schema:**
 ```json
 {
   "consensus_level": 0.75,
   "agreed_points": ["A", "B"],
-  "debated_points": [{"topic": "C", "positions": {...}}],
-  "quality_scores": {"Agent1": {"factual": 9, "logical": 8, ...}}
+  "debated_points": [{"topic": "C", "positions": {"Agent1": "..."}}],
+  "quality_scores": {"Agent1": {"factual": 9, "logical": 8}}
 }
 ```
 
@@ -104,7 +104,7 @@ THEN mark "consensus reached", generate verdict
 
 ### F5: Discussion Orchestration
 
-**Goal:** 4 phases (Independent, Opening, Debate, Convergence), 2-10 rounds, termination (consensus/max rounds/stable/user)
+**Goal:** 4 phases (Independent, Opening, Debate, Convergence), 2-10 rounds, termination (consensus/max rounds/stable/user).
 
 | Phase | Termination |
 |-------|-------------|
@@ -116,7 +116,7 @@ THEN mark "consensus reached", generate verdict
 **Tests:**
 ```gherkin
 GIVEN user starts discussion
-THEN workspace created, phase="Independent", budget=50K tokens (can be user defined), rounds=5(can be user defined)
+THEN workspace created, phase="Independent", budget=50K tokens (configurable), rounds=5 (configurable)
 
 GIVEN Round 3
 WHEN all agents complete
@@ -124,12 +124,12 @@ THEN judge evaluates, check termination
 AND if consensus ≥0.80: transition to Convergence
 
 GIVEN context >150K tokens
-THEN summarize old rounds, keep recent 2 full, all agents have visibility to the previous rounds for them have actively engaging debates against each others.
+THEN summarize older rounds, keep the most recent 2 in full, and ensure all agents can view prior rounds to engage directly with each other.
 ```
 
 ### F6: User Interface
 
-**Goal:** Simple (one-click) + Advanced (config), real-time SSE, templates (Investment/Research/Geopolitical/Tech), export (PDF/MD/JSON)
+**Goal:** Simple (one-click) + Advanced (config), real-time SSE, templates (Investment/Research/Geopolitical/Tech), export (PDF/MD/JSON).
 
 **Tests:**
 ```gherkin
@@ -142,7 +142,7 @@ THEN exec summary, key insights, consensus breakdown, confidence scores, export
 
 ### F7: Parlant Integration
 
-**Goal:** Behavioral guidelines per role, journey templates, tool orchestration, canned responses
+**Goal:** Behavioral guidelines per role, journey templates, tool orchestration, canned responses.
 
 **Tests:**
 ```gherkin
@@ -155,12 +155,11 @@ THEN Parlant journey defines: turn order, time limits, structure
 
 ---
 
-## Architecture --- 
 only for local deployment. would be helpful to have a GUI interface
 
 
 ## Security
-only for local deployment. all api keys to be saved in .env and to be loaded when running
+Local-only. Store all API keys in `.env` and load them at runtime.
 
 
 
@@ -175,18 +174,17 @@ only for local deployment. all api keys to be saved in .env and to be loaded whe
 
 ## Dependencies
 
-**MVP:** OpenAI, Anthropic, Perplexity, Alpha Vantage, 
+**MVP:** OpenAI, Anthropic, Perplexity, Alpha Vantage
 **Phase 2:** Gemini, DeepSeek, Kimi, Brave Search, Yahoo Finance, Wolfram, E2B/Modal
 
 ## Priority
 
 | Priority | Features | Phase |
 |----------|----------|-------|
-| Must | Multi-agent (3+), Tools (Perplexity, Alpha Vantage), Orchestration, Simple UI, Socratic, Judges + CARE, | MVP |
-| Should | Parlant, 5+ LLMs | Phase 2  |
+| Must | Multi-agent (3+), Tools (Perplexity, Alpha Vantage), Orchestration, Simple UI, Socratic, Judges + CARE | MVP |
+| Should | Parlant, 5+ LLMs | Phase 2 |
 | Could | Templates, Advanced UI, 7+ LLMs | Phase 3 |
-| Won't | Mobile, Real-time collab, Custom training, Non-English | Out of scope |
+| Won't | Mobile, Real-time collaboration, Custom training, Non-English | Out of scope |
 
 ---
-
 **v1.0** | **2025-11-12**

@@ -5,10 +5,10 @@
 
 ## Standards
 
-**Python:** Black (100), Ruff, mypy strict, isort
+**Python:** Black (100), Ruff, mypy (strict), isort
 **TypeScript:** Prettier, ESLint (next/core-web-vitals), strict
-**Pre-commit:** black, ruff, mypy, prettier, eslint
-using uv to manage environment
+**Pre-commit hooks:** black, ruff, mypy, prettier, eslint
+**Environment:** uv for Python env management
 
 ## Tests
 
@@ -26,11 +26,11 @@ using uv to manage environment
 
 ## Security
 
-localhost only
+Localhost only (no external exposure)
 
 ## Privacy
 
-localhost only
+Localhost only (no third-party data sharing)
 
 <!-- ## Performance (p95)
 
@@ -64,7 +64,7 @@ localhost only
 
 ## Out of Scope
 
-**Features:** Mobile apps, video/audio I/O, multi-user collab, custom LLM training, social features, non-English
+**Features:** Mobile apps, video/audio I/O, multi-user collaboration, custom LLM training, social features, non-English
 **Integrations:** Slack/Teams, browser extensions, developer API (MVP), CRM
 **Technical:** Multi-tenancy, white-label, SSO, offline
 

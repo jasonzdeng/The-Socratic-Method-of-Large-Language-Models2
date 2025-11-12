@@ -1,6 +1,6 @@
 # The Socratic Method of Large Language Models 2
 
-> An advanced multi-agent AI platform that orchestrates rigorous, critical discussions among multiple Large Language Models to produce well-reasoned, consensus-driven insights on complex topics.
+> Local-first multi-agent LLM debate + judging system producing concise, evidence-backed consensus.
 
 [![Status](https://img.shields.io/badge/status-planning-blue.svg)](https://github.com)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -9,83 +9,44 @@
 
 ## Overview
 
-The Socratic LLM Discussion Forum is a cutting-edge platform that brings together multiple state-of-the-art LLMs (OpenAI, Claude, Perplexity, Gemini, DeepSeek, Kimi, and more) in structured debates using the Socratic Method. By combining multi-agent debate mechanisms, ensemble judging systems, and real-time data access, the platform delivers deeply analytical answers that challenge conventional thinking.
+Multiple heterogeneous LLM agents (OpenAI, Claude, Perplexity, Gemini, DeepSeek, Kimi, Llama) debate using a structured Socratic protocol. A judge panel applies CARE aggregation to score rounds and track convergence toward consensus. Tools (search, finance, sandbox) provide fresh evidence. Output: transparent reasoning + confidence.
 
-### Key Innovation
+### Key Differentiator
 
-Unlike traditional single-LLM chatbots, this platform creates a **structured dialectical process** where diverse AI agents equipped with live data access, analytical tools, and critical reasoning capabilities engage in iterative debate, supervised by ensemble judges, to reach evidence-based consensus.
+Structured multi-agent Socratic debate + correlation-aware judging (CARE) > single-model answer. Emphasis on challenge, evidence, mitigation of conformity.
 
 ---
 
-## Example Use Case
+## Example
 
 **User Question:**
 > "Which companies will benefit most from the release of the Kimi K2 model for the rest of 2025 and into 2026?"
 
-**System Process:**
-1. **Independent Analysis** - 5 AI agents (GPT-4, Claude, Perplexity, Gemini, DeepSeek) independently research using:
-   - Real-time web search (Perplexity Sonar Pro)
-   - Financial data (Alpha Vantage API)
-   - Market analysis tools
-   - Technical documentation
-
-2. **Socratic Debate** - Agents engage in 5-7 rounds of structured dialogue:
-   - Pose probing questions to each other
-   - Challenge assumptions with evidence
-   - Update positions when persuaded
-   - Focus on remaining disagreements
-
-3. **Ensemble Judging** - 3-5 judge LLMs evaluate after each round:
-   - Identify points of consensus vs. debate
-   - Score argument quality and evidence strength
-   - Guide discussion toward resolution
-   - Use CARE aggregation (Correlation-Aware Ranking Ensemble) to avoid bias
-
-4. **Final Verdict** - Present comprehensive analysis with:
-   - Consensus conclusions with confidence scores
-   - Supporting evidence and data
-   - Dissenting minority views
-   - Full discussion transcript
-
-**Result:** Multi-perspective, evidence-based analysis that goes beyond single-LLM responses.
+**Flow:** Independent analyses → iterative Socratic rounds (questions + challenges + citations) → judge scoring + CARE aggregation → consensus verdict (confidence, dissent, evidence).
 
 ---
 
 ## Core Features
 
-### Multi-LLM Agent System
-- **7+ LLM Providers:** OpenAI (GPT-4, o1), Anthropic (Claude), Perplexity (Sonar Pro), Google (Gemini), DeepSeek, Moonshot AI (Kimi), Meta (Llama)
-- **Specialized Agent Roles:** Analysts, Critics, Researchers, Synthesizers
-- **Configurable:** 3-10 debate agents, custom role assignments
+### Multi-Agent System
+- 3–10 debate agents, roles: Analyst, Critic, Researcher, Synthesizer
+- Providers: OpenAI, Claude, Perplexity, Gemini, DeepSeek, Kimi, Llama
 
-### Advanced Tool Integration
-- **Search & Research:** Perplexity Sonar Pro (200K context, real-time web search)
-- **Financial Data:** Alpha Vantage, Yahoo Finance, FRED Economic Data
-- **Data Analysis:** Python sandbox with pandas, numpy, scipy, visualization
-- **Knowledge:** Wolfram Alpha, custom APIs
-- **Framework:** Parlant for enhanced agent control and consistency
+### Tooling
+- Search (Perplexity Sonar Pro)
+- Finance (Alpha Vantage; later Yahoo Finance)
+- Python sandbox (analysis + plots)
+- Knowledge (Wolfram Alpha)
+- Parlant framework (guidelines / journeys)
 
-### Socratic Method Implementation
-Based on 2025 state-of-the-art research:
-- **IntelliChain:** Knowledge graph integration, chain-of-thought dialogue
-- **CONSENSAGENT:** Sycophancy mitigation, conformity bias prevention
-- **M-MAD:** Multidimensional multi-agent debate framework
-- **Iterative Questioning:** Agents probe assumptions and demand evidence
-- **Strategic Engagement:** Agents choose which arguments to address
+### Socratic Method
+IntelliChain (question reformulation), CONSENSAGENT (conformity mitigation), assumption surfacing, confidence updates, citations every round.
 
-### Ensemble Judge Panel
-- **3-5 Judge Agents** from diverse LLM providers
-- **CARE Aggregation:** Correlation-Aware Ranking Ensemble (NeurIPS 2025)
-  - 10-25% better than simple majority voting
-  - Mitigates systematic biases (verbosity, position effects)
-  - Models judge correlations from historical data
-- **Structured Evaluation:** Factual accuracy, logical coherence, novel insights, consensus progress
+### Judge Panel
+3–5 judges (diverse providers) → score (factual, logical, novel, engagement, consensus); CARE aggregation >10% over majority.
 
-### Discussion Workspace
-- **Live Tracking:** Real-time progress updates as agents contribute
-- **Evidence Repository:** All sources, citations, and data artifacts
-- **Consensus Tracker:** Visual representation of agreement evolution
-- **Full Transparency:** Complete discussion history and reasoning chains
+### Workspace
+Streaming updates; evidence repository; consensus progression; full transcript.
 
 ---
 
@@ -129,32 +90,15 @@ Based on 2025 state-of-the-art research:
 
 ### Tech Stack
 
-**Backend:**
-- Python 3.11+ with FastAPI
-- LangGraph or AutoGen + Parlant
-- LiteLLM (unified LLM interface)
-- PostgreSQL + Redis + Vector DB
-- Docker containers
-
-**Frontend:**
-- Next.js 14+ (TypeScript)
-- React 18 + shadcn/ui
-- Tailwind CSS
-- Server-Sent Events (real-time)
-
-**Infrastructure:**
-- AWS/GCP (Kubernetes or ECS)
-- CI/CD: GitHub Actions
-- Monitoring: Datadog/Prometheus
-- IaC: Terraform
+**Backend:** FastAPI, LiteLLM, Parlant, PostgreSQL, Redis, Vector DB, Docker.  
+**Frontend:** Next.js (TypeScript), shadcn/ui, Tailwind, SSE streaming.  
+**Local-first:** `.env` secrets; no external hosting required (MVP).
 
 ---
 
 ## Documentation
 
-### Core Documents (SpecKit-Optimized)
-
-Located in `docs/inputs/` for use with SpecKit tools:
+### Core Documents (in `docs/inputs/`)
 
 - **[PROJECT_CONSTITUTION.md](docs/inputs/PROJECT_CONSTITUTION.md)** - Project Rules & Standards
   - Technology stack (pinned versions)
@@ -184,9 +128,7 @@ Located in `docs/inputs/` for use with SpecKit tools:
   - Risk management matrix
   - **Use with:** `/plan docs/inputs/WORKPLAN.md`
 
-### Using SpecKit
-
-This project is designed to work seamlessly with SpecKit's project management tools:
+### SpecKit Commands
 
 ```bash
 # 1. Set up project constitution (rules and standards)
@@ -201,42 +143,15 @@ This project is designed to work seamlessly with SpecKit's project management to
 
 ---
 
-## Development Roadmap
-
-### Phase 1: Core MVP (Weeks 1-8)
-- ✅ Agent runtime with 3+ LLM providers
-- ✅ Basic tool integration (Perplexity, Alpha Vantage)
-- ✅ Discussion orchestration
-- ✅ Simple web UI
-- **Milestone:** Working end-to-end discussion
-
-### Phase 2: Socratic Method & Judges (Weeks 9-12)
-- ✅ Structured Socratic methodology
-- ✅ Ensemble judge panel with CARE aggregation
-- ✅ Parlant framework integration
-- ✅ Enhanced debate quality
-- **Milestone:** 80%+ consensus achievement rate
-
-### Phase 3: Advanced Features (Weeks 13-16)
-- ✅ 7+ LLM provider support
-- ✅ Advanced UI with templates
-- ✅ Performance optimization
-- ✅ Security hardening
-- **Milestone:** Production-ready platform
-
-### Phase 4: Beta Launch (Weeks 17-20)
-- ✅ Beta testing with 50+ users
-- ✅ Iteration based on feedback
-- ✅ Final polish and documentation
-- **Milestone:** Public launch ready
+## Roadmap (Summary)
+Phase 1 (W1-8): Agents, tools, orchestration, simple UI (<5 min run)  
+Phase 2 (W9-12): Socratic engine, judges + CARE (>70% consensus)  
+Phase 3 (W13-16): 7+ providers, perf (<60s first round), security  
+Phase 4 (W17-20): Internal beta, polish, local release
 
 ---
 
-## State-of-the-Art Research
-
-This project integrates the latest 2024-2025 research in multi-agent LLM systems:
-
-### Core Papers & Methods
+## Research Basis (2024–2025)
 
 1. **IntelliChain** (Jan 2025)
    - [arxiv.org/abs/2502.00010](https://arxiv.org/abs/2502.00010)
@@ -261,30 +176,14 @@ This project integrates the latest 2024-2025 research in multi-agent LLM systems
 
 ---
 
-## Key Differentiators
-
-### vs. Single-LLM Chatbots (ChatGPT, Claude)
-- **Multiple perspectives** from diverse models
-- **Structured debate** vs. single response
-- **Evidence-based consensus** vs. individual opinion
-- **Visible reasoning process** vs. black box
-
-### vs. Perplexity
-- **Multi-agent analysis** vs. single search-enhanced LLM
-- **Socratic debate** vs. direct answer
-- **Consensus building** vs. synthesized summary
-
-### vs. Other Multi-Agent Systems
-- **Structured Socratic method** (unique)
-- **Advanced ensemble judging** (CARE aggregation)
-- **Challenge-oriented** (designed to question mainstream views)
-- **Rich tool ecosystem** (search, data, analysis)
+## Differentiation
+Single LLM: lacks challenge → we add structured cross-model critique.  
+Perplexity: single search model → we aggregate diverse agents.  
+Other multi-agent: we add Socratic rigor + CARE + evidence discipline.
 
 ---
 
-## Getting Started (Future)
-
-Once development begins:
+## Getting Started (Planned)
 
 ```bash
 # Clone repository
@@ -328,7 +227,7 @@ To run the full platform, you'll need API access to:
 
 ---
 
-## Use Cases
+## Example Use Cases
 
 ### Investment Analysis
 > "Given the release of DeepSeek V3, which semiconductor companies will see the most impact on their stock prices?"
@@ -357,7 +256,7 @@ To run the full platform, you'll need API access to:
 
 ---
 
-## Success Metrics
+## Success Metrics (Targets)
 
 ### Quality
 - **Factual Accuracy:** >90% of claims verified as correct
@@ -377,56 +276,17 @@ To run the full platform, you'll need API access to:
 ---
 
 ## Contributing
-
-This project is currently in the planning phase. Contributions will be welcome once development begins!
-
-Future contribution areas:
-- Custom tool integrations
-- LLM provider adapters
-- Discussion templates
-- Prompt engineering
-- Testing and quality assurance
-- Documentation
+Planning phase. Early helpful areas: tool adapters, judge evaluation metrics, prompt hardening, test harnesses.
 
 ---
 
-## Research & Inspiration
-
-### Key Influences
-- The Socratic Method (classical philosophy)
-- Multi-agent reinforcement learning
-- Ensemble methods in machine learning
-- Deliberative democracy theory
-- Critical thinking frameworks
-
-### Related Projects
-- [Parlant](https://github.com/emcie-co/parlant) - LLM agent framework
-- [LangGraph](https://github.com/langchain-ai/langgraph) - Multi-agent orchestration
-- [AutoGen](https://github.com/microsoft/autogen) - Multi-agent conversations
-- [LiteLLM](https://github.com/BerriAI/litellm) - LLM provider abstraction
+## Influences & Related
+Influences: Socratic method, ensemble learning, deliberative processes.  
+Related: Parlant, LangGraph, AutoGen, LiteLLM.
 
 ---
 
-## Roadmap (Post-Launch)
-
-### Phase 5: Advanced Intelligence
-- Meta-learning system (learns optimal configurations)
-- User participation (inject arguments mid-discussion)
-- Discussion branching ("what-if" scenarios)
-- Multi-user team debates
-
-### Phase 6: Specialization
-- Domain-specific agent training
-- Industry vertical templates
-- Enterprise integrations (Slack, Teams)
-- Developer API
-
-### Phase 7: Ecosystem
-- Plugin marketplace
-- Community-contributed tools
-- Custom LLM provider support
-- White-label solutions
-- Mobile apps
+<!-- Future roadmap (post local release) intentionally condensed. -->
 
 ---
 
@@ -457,8 +317,8 @@ Special thanks to the open-source community for frameworks like Parlant, LangGra
 
 ---
 
-**Status:** Planning & Design Phase
-**Version:** 0.1.0 (Pre-Alpha)
+**Status:** Planning
+**Version:** 0.1.0
 **Last Updated:** 2025-11-12
 
 ---
@@ -474,4 +334,4 @@ Special thanks to the open-source community for frameworks like Parlant, LangGra
 
 ---
 
-*"The unexamined answer is not worth accepting." - Inspired by Socrates*
+*"The unexamined answer is not worth accepting."*

@@ -1,0 +1,45 @@
+[project]
+name = "the-socratic-method-of-large-language-models2"
+version = "0.1.0"
+description = "Local-first multi-agent LLM debate + judging system"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "mypy>=1.18.2",
+    "pytest>=9.0.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.4",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.4.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "--cov=src --cov-fail-under=80 --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", ".venv/*"]
