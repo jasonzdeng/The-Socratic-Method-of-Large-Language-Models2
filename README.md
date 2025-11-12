@@ -152,19 +152,52 @@ Based on 2025 state-of-the-art research:
 
 ## Documentation
 
-- **[PRD.md](PRD.md)** - Complete Product Requirements Document
-  - Product vision and goals
-  - Detailed feature specifications
-  - Technical architecture
-  - State-of-the-art research integration
-  - Success metrics and KPIs
+### Core Documents (SpecKit-Optimized)
 
-- **[WORKPLAN.md](WORKPLAN.md)** - Implementation Workplan
+Located in `docs/inputs/` for use with SpecKit tools:
+
+- **[PROJECT_CONSTITUTION.md](docs/inputs/PROJECT_CONSTITUTION.md)** - Project Rules & Standards
+  - Technology stack (pinned versions)
+  - Code quality standards (formatting, linting, type checking)
+  - Test coverage requirements (80% unit, 70% integration)
+  - Git branch policy and protection rules
+  - Security and privacy requirements
+  - Documentation standards
+  - Explicitly defined out-of-scope items
+  - **Use with:** `/constitute docs/inputs/PROJECT_CONSTITUTION.md`
+
+- **[PRD.md](docs/inputs/PRD.md)** - Product Requirements Document
+  - Goals, non-goals, and success metrics
+  - Target users and personas
+  - 7 core features with acceptance tests
+  - Technical architecture and constraints
+  - State-of-the-art research integration
+  - Stack pins and security notes
+  - **Use with:** `/specify docs/inputs/PRD.md`
+
+- **[WORKPLAN.md](docs/inputs/WORKPLAN.md)** - Implementation Workplan
   - 4 phases over 20 weeks
-  - Sprint-by-sprint breakdown
-  - Resource requirements
-  - Risk mitigation strategies
-  - Testing approach
+  - Sprint-by-sprint task breakdown
+  - Milestones and decision points
+  - Dependencies and critical path
+  - Resource allocation and budget
+  - Risk management matrix
+  - **Use with:** `/plan docs/inputs/WORKPLAN.md`
+
+### Using SpecKit
+
+This project is designed to work seamlessly with SpecKit's project management tools:
+
+```bash
+# 1. Set up project constitution (rules and standards)
+/constitute docs/inputs/PROJECT_CONSTITUTION.md
+
+# 2. Load product requirements
+/specify docs/inputs/PRD.md
+
+# 3. Generate implementation plan
+/plan docs/inputs/WORKPLAN.md
+```
 
 ---
 
@@ -432,8 +465,9 @@ Special thanks to the open-source community for frameworks like Parlant, LangGra
 
 ## Quick Links
 
-- [📋 Product Requirements Document](PRD.md)
-- [🗓️ Implementation Workplan](WORKPLAN.md)
+- [📋 Product Requirements Document](docs/inputs/PRD.md)
+- [🗓️ Implementation Workplan](docs/inputs/WORKPLAN.md)
+- [⚙️ Project Constitution](docs/inputs/PROJECT_CONSTITUTION.md)
 - [🔬 Research Papers](#state-of-the-art-research)
 - [🏗️ Technical Architecture](#technical-architecture)
 - [📊 Success Metrics](#success-metrics)
